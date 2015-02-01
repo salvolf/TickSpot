@@ -1,0 +1,97 @@
+<resources>
+
+    <color name="primary">#eb3636</color>
+    <color name="primary_dark">#b70909</color>
+    <color name="accent">@color/primary_dark</color>
+    <color name="activated">#f5f5f5</color>
+    <color name="accent_light">#66eb3636</color>
+
+    <color name="twitter_blue">#5fa1cf</color>
+    <color name="facebook_blue">#3b579d</color>
+
+    <color name="call_green">#2ecc71</color>
+    <color name="sms_green">@color/call_green</color>
+    <color name="voip_blue">#39c0c8</color>
+    <color name="roaming_purple">#cd97ed</color>
+
+    <!-- 12% alpha as defined by http://www.google.com/design/spec/style/color.html#color-ui-color-application -->
+    <color name="material_divider">#1f000000</color>
+
+    <!-- Anything below this line should be checked and doubled-checked whether iut is still useful -->
+
+    <!--Widget Colors -->
+    <color name="widget_background">#88000000</color>
+    <color name="roaming_bundle">#AB6DD1</color>
+
+    <!-- Background color of dialer list items (contacts, call log entries) -->
+    <color name="background_dialer_list_items">#eeeeee</color>
+
+    <color name="background_msisdn_list_items">@color/background_dialer_list_items</color>
+    <color name="background_msisdn_list_items_selected">#cccccc</color>
+
+    <!-- Background color of action bars -->
+    <color name="background_progressbar_balance_color">#F5F5F5</color>
+    <color name="background_circle_progressbar">#484848</color>
+    <color name="gray_text">#929292</color>
+
+    <!-- Radio button disabled text color -->
+    <color name="gray_out_background">#E6E6E6</color>
+
+    <!-- Background color walkthrough -->
+    <color name="walk_background_color">#60000000</color>
+
+    <!-- insights -->
+    <color name="background_color_circles_viewpager_insights">#2e2e2e</color>
+    <color name="gray_insights">#929292</color>
+    <color name="photos_color">#4f77b7</color>
+    <color name="videos_color">#e76550</color>
+    <color name="songs_color">#7ab736</color>
+    <color name="skype_calls_color">#43c1ee</color>
+
+    <color name="background_grey">#232323</color>
+
+    <color name="background_light_grey">#fafafa</color>
+
+    <color name="background_black">#000000</color>
+    <color name="background_almost_black">#131313</color>
+
+    <!-- Basic Text Color -->
+    <color name="text_gray">#777777</color>
+
+    <color name="dailer_button_gray">#FFFAFAFA</color>
+    <color name="dailer_button_gray_pressed">#FFF3F3F3</color>
+
+    <color name="topup_gray">#c5c5c5</color>
+    <color name="soft_gray">#dddddd</color>
+    <color name="top_up_balance_expired">#ffefd4</color>
+
+    <color name="notification_error_bg">#ffefd4</color>
+    <color name="notification_error_text">#eb3636</color>
+
+    <color name="notification_info_bg">#99f2ff</color>
+    <color name="notification_info_text">#0690a4</color>
+
+    <color name="notification_success_bg">#bcfbd7</color>
+    <color name="notification_success_text">#1eb95f</color>
+
+    <!-- button colors -->
+    <color name="green">#2ecc71</color>
+    <color name="gray_msisdn">#383838</color>
+
+    <color name="orange">#ffb449</color>
+
+    <color name="purple_dark">#bf81e4</color>
+
+    <color name="blue">#5fa1cf</color>
+    <color name="red">#eb3636</color>
+    <color name="red_dark">#b70909</color>
+
+    <color name="button_disabled">#a0a0a0</color>
+    <color name="button_pressed_red">#c80808</color>
+    <color name="button_top5_pressed">#dfdfdf</color>
+
+    <color name="insight_viking_toggle_button">#505050</color>
+
+    <color name="banner_item_transparent">#00000000</color>
+
+</resources>

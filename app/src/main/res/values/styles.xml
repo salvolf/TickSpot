@@ -1,0 +1,110 @@
+<resources>
+
+    <!-- Base application theme. -->
+    <style name="AppThemeBase" parent="Theme.AppCompat.Light.NoActionBar">
+
+        <item name="colorPrimary">@color/primary</item>
+        <item name="colorPrimaryDark">@color/primary_dark</item>
+        <item name="colorAccent">@color/primary</item>
+
+        <item name="android:textColorLink">@color/primary</item>
+
+        <item name="android:buttonStyle">@style/VikingButtonStyle</item>
+        <item name="android:imageButtonStyle">@style/VikingButtonStyle</item>
+        <item name="android:windowBackground">@android:color/white</item>
+
+
+    </style>
+
+    <style name="AppTheme" parent="AppThemeBase">
+    </style>
+
+    <style name="AppThemeLoginBase" parent="Theme.AppCompat.NoActionBar">
+        <item name="colorPrimary">@color/primary</item>
+        <item name="colorAccent">@color/primary</item>
+    </style>
+
+    <style name="AppThemeLogin" parent="AppThemeLoginBase">
+    </style>
+
+    <style name="OverlayWhiteAccent" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
+        <item name="colorAccent">@android:color/white</item>
+        <item name="android:textColor">@android:color/white</item>
+    </style>
+
+
+    <style name="VikingRefreshActionItemProgress"></style>
+
+    <style name="VikingButtonStyle" parent="android:Widget.Holo.Button">
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:paddingLeft">@dimen/grid_default</item>
+        <item name="android:paddingRight">@dimen/grid_default</item>
+        <item name="android:background">@drawable/red_button</item>
+    </style>
+
+    <style name="VikingButtonStyle.Gray" parent="VikingButtonStyle">
+        <item name="android:textColor">@color/primary_text_default_material_light</item>
+        <item name="android:background">@color/soft_gray</item>
+    </style>
+
+    <!-- Anything below this line should be checked and doubled-checked whether iut is still useful -->
+
+    <style name="TextView_Dialog_Title">
+        <item name="android:layout_marginLeft">20dp</item>
+        <item name="android:layout_marginRight">20dp</item>
+        <item name="android:layout_marginTop">10dp</item>
+        <item name="android:layout_marginBottom">10dp</item>
+        <item name="android:textSize">20sp</item>
+        <item name="android:gravity">center_horizontal</item>
+    </style>
+    <style name="TextView_Dialog_Title_Left" parent="TextView_Dialog_Title">
+        <item name="android:gravity">left</item>
+    </style>
+
+    <style name="TextView_Dialog_SubTitle">
+        <item name="android:textColor">@color/gray_text</item>
+        <item name="android:textSize">18sp</item>
+    </style>
+
+    <style name="TextView_Dialog_Text" parent="@style/TextView_Dialog_SubTitle">
+        <item name="android:textSize">16sp</item>
+    </style>
+
+    <style name="TextView_Number_Verification">
+        <item name="android:textColor">@color/gray_text</item>
+        <item name="android:textSize">16sp</item>
+    </style>
+
+    <style name="TextView_Number_Verification_MSISDN">
+        <item name="android:textColor">@color/red</item>
+        <item name="android:textSize">20sp</item>
+    </style>
+
+    <style name="RedButton" parent="android:Widget.Button">
+        <item name="android:layout_marginLeft">20dp</item>
+        <item name="android:layout_marginRight">20dp</item>
+        <item name="android:layout_marginBottom">10dp</item>
+        <item name="android:layout_marginTop">10dp</item>
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:background">@drawable/red_button</item>
+    </style>
+
+    <style name="GrayButton" parent="android:Widget.Button">
+        <item name="android:layout_marginLeft">20dp</item>
+        <item name="android:layout_marginRight">20dp</item>
+        <item name="android:layout_marginBottom">10dp</item>
+        <item name="android:layout_marginTop">10dp</item>
+        <item name="android:textColor">@color/text_gray</item>
+        <item name="android:background">@color/soft_gray</item>
+    </style>
+
+    <style name="DailerButton">
+        <item name="android:background">?android:attr/selectableItemBackground</item>
+        <item name="android:padding">@dimen/grid_double</item>
+        <item name="android:gravity">center</item>
+        <item name="android:layout_margin">4dp</item>
+        <item name="android:textSize">22sp</item>
+        <item name="android:textColor">@color/background_black</item>
+    </style>
+
+</resources>
