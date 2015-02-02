@@ -3,6 +3,8 @@ package tickspot.application.sev.tickspot;
 import android.app.Application;
 import android.content.Context;
 
+import com.squareup.otto.Bus;
+
 import tickspot.application.sev.tickspot.bus.MainThreadBus;
 
 public class TickspotApplication extends Application {
@@ -16,6 +18,14 @@ public class TickspotApplication extends Application {
         } else {
             return null;
         }
+    }
+
+    public static final MainThreadBus getEventBus() {
+        if (eventBus == null) {
+            eventBus = new MainThreadBus(new Bus());
+        }
+        return eventBus;
+
     }
 
     @Override

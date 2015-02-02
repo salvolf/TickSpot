@@ -6,6 +6,7 @@ import android.view.MenuItem;
 
 import roboguice.activity.RoboActionBarActivity;
 import tickspot.application.sev.tickspot.R;
+import tickspot.application.sev.tickspot.TickspotApplication;
 
 public class BaseActivity extends RoboActionBarActivity {
 
@@ -39,6 +40,13 @@ public class BaseActivity extends RoboActionBarActivity {
 
     @Override
     protected void onResume() {
+        TickspotApplication.getEventBus().register(this);
         super.onResume();
+    }
+
+    @Override
+    protected void onPause() {
+        TickspotApplication.getEventBus().unregister(this);
+        super.onPause();
     }
 }

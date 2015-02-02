@@ -1,13 +1,16 @@
 package tickspot.application.sev.tickspot.activities;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
 import com.google.inject.Inject;
+import com.squareup.otto.Subscribe;
 
 import tickspot.application.sev.tickspot.R;
 import tickspot.application.sev.tickspot.managers.RetroManager;
+import tickspot.application.sev.tickspot.model.ProjectList;
 
 public class MainActivity extends BaseActivity {
 
@@ -42,4 +45,9 @@ public class MainActivity extends BaseActivity {
 
         return super.onOptionsItemSelected(item);
     }
+
+   @Subscribe
+    public void onProjectsApiCallDone(ProjectList projectList){
+       Log.e ("TEST","Received projectResponse through the bus");
+   }
 }
