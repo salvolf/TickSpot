@@ -1,4 +1,4 @@
-package tickspot.application.sev.tickspot.RestService;
+package tickspot.application.sev.tickspot.restservice;
 
 import com.squareup.okhttp.OkHttpClient;
 
@@ -7,24 +7,22 @@ import retrofit.RequestInterceptor;
 import retrofit.RestAdapter;
 import retrofit.client.OkClient;
 import tickspot.application.sev.tickspot.BuildConfig;
-import tickspot.application.sev.tickspot.Preferences.Preferences;
+import tickspot.application.sev.tickspot.preferences.Preferences;
+import tickspot.application.sev.tickspot.managers.RetroManager;
 
-/**
- * Created by Sev on 31/01/15.
- */
 public class ServiceFactory {
-    private static RestService authenticatedService;
-    private static RestService notAuthenticatedService;
+    private static RetroManager.Service authenticatedService;
+    private static RetroManager.Service notAuthenticatedService;
 
-    public static RestService getService() {
+    public static RetroManager.Service getService() {
         if (Preferences.getAccessToken() != null) {
             if (authenticatedService == null) {
-                authenticatedService = getAuthenticatedAdapter().create(RestService.class);
+                authenticatedService = getAuthenticatedAdapter().create(RetroManager.Service.class);
             }
             return authenticatedService;
         } else {
             if (notAuthenticatedService == null) {
-                notAuthenticatedService = getNotAuthenticatedAdapter().create(RestService.class);
+                notAuthenticatedService = getNotAuthenticatedAdapter().create(RetroManager.Service.class);
             }
             return notAuthenticatedService;
         }

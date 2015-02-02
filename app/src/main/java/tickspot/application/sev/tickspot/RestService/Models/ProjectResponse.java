@@ -1,4 +1,4 @@
-package tickspot.application.sev.tickspot.RestService.Models;
+package tickspot.application.sev.tickspot.restservice.models;
 
     /*
     "id":16,

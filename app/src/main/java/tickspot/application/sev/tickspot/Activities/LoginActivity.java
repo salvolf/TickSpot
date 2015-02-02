@@ -1,4 +1,4 @@
-package tickspot.application.sev.tickspot.Activities;
+package tickspot.application.sev.tickspot.activities;
 
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -21,16 +21,15 @@ import org.apache.http.HttpStatus;
 import java.util.ArrayList;
 
 import retrofit.RetrofitError;
-import roboguice.activity.RoboActionBarActivity;
 import roboguice.inject.InjectView;
 import tickspot.application.sev.tickspot.Constants;
-import tickspot.application.sev.tickspot.Preferences.Preferences;
 import tickspot.application.sev.tickspot.R;
-import tickspot.application.sev.tickspot.RestService.Models.Subscription;
-import tickspot.application.sev.tickspot.RestService.ServiceFactory;
+import tickspot.application.sev.tickspot.preferences.Preferences;
+import tickspot.application.sev.tickspot.restservice.ServiceFactory;
+import tickspot.application.sev.tickspot.restservice.models.Subscription;
 
 
-public class LoginActivity extends RoboActionBarActivity implements View.OnClickListener, TextView.OnEditorActionListener {
+public class LoginActivity extends BaseActivity implements View.OnClickListener, TextView.OnEditorActionListener {
     private final static String TAG = "LoginActivity";
 
     @InjectView(R.id.email)

@@ -16,5 +16,6 @@
     <string name="could_not_authenticate">Could not authenticate</string>
     <string name="problem_contacting_server">Could not connect to server</string>
     <string name="title_activity_main">MainActivity</string>
+    <string name="title_activity_base">BaseActivity</string>
 
 </resources>

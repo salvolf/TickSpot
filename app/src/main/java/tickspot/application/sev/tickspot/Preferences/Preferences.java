@@ -1,4 +1,4 @@
-package tickspot.application.sev.tickspot.Preferences;
+package tickspot.application.sev.tickspot.preferences;
 
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
