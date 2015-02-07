@@ -2,17 +2,19 @@ package tickspot.application.sev.tickspot.adapters;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentStatePagerAdapter;
 
 import java.util.ArrayList;
 import java.util.Calendar;
 
 import tickspot.application.sev.tickspot.fragments.DayFragment;
 
-public class daysAdapter extends FragmentPagerAdapter {
+public class DaysAdapter extends FragmentStatePagerAdapter {
+    Calendar calendar;
     private ArrayList<DayFragment> dayFragments;
-    public daysAdapter(FragmentManager fm) {
+    public DaysAdapter(FragmentManager fm) {
         super(fm);
+        calendar = Calendar.getInstance();
     }
 
     @Override
@@ -28,6 +30,6 @@ public class daysAdapter extends FragmentPagerAdapter {
 
     @Override
     public CharSequence getPageTitle(int position) {
-        return String.valueOf(position+1);
+        return String.valueOf(position + 1);
     }
 }
