@@ -4,14 +4,12 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
-import java.util.ArrayList;
 import java.util.Calendar;
 
 import tickspot.application.sev.tickspot.fragments.DayFragment;
 
 public class DaysAdapter extends FragmentStatePagerAdapter {
     Calendar calendar;
-    private ArrayList<DayFragment> dayFragments;
     public DaysAdapter(FragmentManager fm) {
         super(fm);
         calendar = Calendar.getInstance();
@@ -19,7 +17,7 @@ public class DaysAdapter extends FragmentStatePagerAdapter {
 
     @Override
     public Fragment getItem(int position) {
-        return new DayFragment();
+        return  new DayFragment();
     }
 
 

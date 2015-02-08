@@ -15,7 +15,8 @@ package tickspot.application.sev.tickspot.restservice.models;
     "updated_at":"2014-09-09T13:36:20.000-04:00"
      */
 
-public class ProjectResponse {
+
+public class Project {
     public int id;
     public String name;
     public double budget;

@@ -16,21 +16,38 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.inject.Inject;
+import com.squareup.otto.Subscribe;
+
 import org.apache.http.HttpStatus;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import retrofit.RetrofitError;
 import roboguice.inject.InjectView;
 import tickspot.application.sev.tickspot.Constants;
 import tickspot.application.sev.tickspot.R;
+import tickspot.application.sev.tickspot.managers.ProjectsAndTasksManager;
+import tickspot.application.sev.tickspot.managers.RetroManager;
+import tickspot.application.sev.tickspot.model.ProjectList;
+import tickspot.application.sev.tickspot.model.TaskList;
 import tickspot.application.sev.tickspot.preferences.Preferences;
 import tickspot.application.sev.tickspot.restservice.ServiceFactory;
+import tickspot.application.sev.tickspot.restservice.models.Project;
 import tickspot.application.sev.tickspot.restservice.models.Subscription;
+import tickspot.application.sev.tickspot.restservice.models.Task;
 
 
 public class LoginActivity extends BaseActivity implements View.OnClickListener, TextView.OnEditorActionListener {
+
     private final static String TAG = "LoginActivity";
+
+    @Inject
+    private RetroManager retroManager;
+
+    @Inject
+    private ProjectsAndTasksManager projectsAndTasksManager;
 
     @InjectView(R.id.email)
     private EditText mEmailView;
@@ -45,6 +62,10 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
 
     @InjectView(R.id.progress)
     private View mProgress;
+
+    List<Project> projectList;
+
+    List<Task> taskList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -131,7 +152,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
             String basicAuth = "Basic " + Base64.encodeToString(String.format("%s:%s", mEmailView.getText().toString(), mPasswordView.getText().toString()).getBytes(), Base64.NO_WRAP);
             String credentials = "salvatorelafiura@mobilevikings.com:h4ss3lt3500";
             //String credentials =(mEmailView.getText().toString() + ":" +mPasswordView.getText().toString());
-            String encodedCredentials  = "Basic " + Base64.encodeToString(credentials.getBytes(), Base64.NO_WRAP);
+            String encodedCredentials = "Basic " + Base64.encodeToString(credentials.getBytes(), Base64.NO_WRAP);
 
             try {
                 subscriptionsResponse = ServiceFactory.getService().getTokens(encodedCredentials);
@@ -147,14 +168,14 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
         @Override
         protected void onPostExecute(final Integer responseCode) {
             if (responseCode == HttpStatus.SC_OK) {
-                for(Subscription subscription : subscriptionsResponse ) {
-                   if(subscription.company.equals(Constants.VIKINGO_COMPANY)) {
-                       Preferences.setAccessToken(subscriptionsResponse.get(0).api_token);
-                       Preferences.setSubscriptionID(subscriptionsResponse.get(0).subscription_id);
-                       showProgress(false);
-                       Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                       startActivity(intent);
-                   }
+                for (Subscription subscription : subscriptionsResponse) {
+                    if (subscription.company.equals(Constants.VIKINGO_COMPANY)) {
+                        Preferences.setAccessToken(subscriptionsResponse.get(0).api_token);
+                        Preferences.setSubscriptionID(subscriptionsResponse.get(0).subscription_id);
+                        retroManager.getProjects();
+                        retroManager.getTasks();
+                        /**/
+                    }
                 }
 
             } else if (responseCode == HttpStatus.SC_BAD_REQUEST) {
@@ -177,4 +198,28 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
         mProgress.setVisibility(show ? View.VISIBLE : View.GONE);
         mSignInButton.setEnabled(!show);
     }
+
+    @Subscribe
+    public void onProjectsApiCallDone(ProjectList projectList) {
+        Log.e("TEST", "Received ProjectList through the bus");
+        this.projectList = projectList.projects;
+        projectsAndTasksManager.setProjects(projectList.projects);
+        areAllApiCallDone();
+    }
+
+    @Subscribe
+    public void onTasksApiCallDone(TaskList taskList) {
+        Log.e("TEST", "Received TaskList through the bus");
+        this.taskList = taskList.tasks;
+        projectsAndTasksManager.setTasks(taskList.tasks);
+        areAllApiCallDone();
+    }
+
+    private void areAllApiCallDone() {
+        showProgress(false);
+        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+        startActivity(intent);
+
+    }
+
 }

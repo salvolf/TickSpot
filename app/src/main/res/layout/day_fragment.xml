@@ -14,7 +14,7 @@
         android:text="Project" />
 
     <Spinner
-        android:id="@+id/spinnerProject"
+        android:id="@+id/spinner_project"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         >
@@ -29,7 +29,7 @@
         android:text="Task" />
 
     <Spinner
-        android:id="@+id/spinnerTask"
+        android:id="@+id/spinner_task"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
     </Spinner>

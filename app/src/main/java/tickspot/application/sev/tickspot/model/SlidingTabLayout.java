@@ -221,6 +221,8 @@ public class SlidingTabLayout extends HorizontalScrollView {
                 lp.width = 0;
                 lp.weight = 1;
             }
+
+            //Setting the other textViews
             Calendar cal = Calendar.getInstance();
             cal.set(Calendar.DAY_OF_MONTH,i+1);
             tabMonthText.setText(new SimpleDateFormat("MMM").format(cal.getTime()));
