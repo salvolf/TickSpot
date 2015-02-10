@@ -29,14 +29,16 @@ import roboguice.inject.InjectView;
 import tickspot.application.sev.tickspot.Constants;
 import tickspot.application.sev.tickspot.Credentials;
 import tickspot.application.sev.tickspot.R;
-import tickspot.application.sev.tickspot.managers.ProjectsAndTasksManager;
+import tickspot.application.sev.tickspot.managers.ResponsesManager;
 import tickspot.application.sev.tickspot.managers.RetroManager;
-import tickspot.application.sev.tickspot.model.ProjectList;
-import tickspot.application.sev.tickspot.model.TaskList;
 import tickspot.application.sev.tickspot.preferences.Preferences;
 import tickspot.application.sev.tickspot.restservice.ServiceFactory;
+import tickspot.application.sev.tickspot.restservice.models.Client;
+import tickspot.application.sev.tickspot.restservice.models.ClientList;
+import tickspot.application.sev.tickspot.restservice.models.ProjectList;
 import tickspot.application.sev.tickspot.restservice.models.ProjectOrTasks;
 import tickspot.application.sev.tickspot.restservice.models.Subscription;
+import tickspot.application.sev.tickspot.restservice.models.TaskList;
 
 
 public class LoginActivity extends BaseActivity implements View.OnClickListener, TextView.OnEditorActionListener {
@@ -47,7 +49,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
     private RetroManager retroManager;
 
     @Inject
-    private ProjectsAndTasksManager projectsAndTasksManager;
+    private ResponsesManager responsesManager;
 
     @InjectView(R.id.email)
     private EditText mEmailView;
@@ -66,6 +68,8 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
     List<ProjectOrTasks> projects;
 
     List<ProjectOrTasks> tasks;
+
+    List<Client> clients;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -174,6 +178,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
                     if (subscription.company.equals(Constants.VIKINGO_COMPANY)) {
                         Preferences.setAccessToken(subscriptionsResponse.get(0).api_token);
                         Preferences.setSubscriptionID(subscriptionsResponse.get(0).subscription_id);
+                        retroManager.getClients();
                         retroManager.getProjects();
                         retroManager.getTasks();
                         /**/
@@ -205,7 +210,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
     public void onProjectsApiCallDone(ProjectList projectList) {
         Log.e("TEST", "Received ProjectList through the bus");
         this.projects = projectList.projects;
-        projectsAndTasksManager.setProjects(projectList.projects);
+        responsesManager.setProjects(projectList.projects);
         areAllApiCallDone();
     }
 
@@ -213,12 +218,20 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
     public void onTasksApiCallDone(TaskList taskList) {
         Log.e("TEST", "Received TaskList through the bus");
         this.tasks = taskList.tasks;
-        projectsAndTasksManager.setTasks(taskList.tasks);
+        responsesManager.setTasks(taskList.tasks);
+        areAllApiCallDone();
+    }
+
+    @Subscribe
+    public void onClientsApiCallDone(ClientList clientList) {
+        Log.e("TEST", "Received ClientList through the bus");
+        this.clients = clientList.clients;
+        responsesManager.setClients(clientList.clients);
         areAllApiCallDone();
     }
 
     private void areAllApiCallDone() {
-        if(tasks!=null && projects!=null) {
+        if(tasks!=null && projects!=null && clients!=null) {
             showProgress(false);
             Intent intent = new Intent(LoginActivity.this, MainActivity.class);
             startActivity(intent);

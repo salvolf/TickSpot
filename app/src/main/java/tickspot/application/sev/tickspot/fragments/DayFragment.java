@@ -12,12 +12,12 @@ import roboguice.fragment.RoboFragment;
 import roboguice.inject.InjectView;
 import tickspot.application.sev.tickspot.R;
 import tickspot.application.sev.tickspot.adapters.ProjectsSpinnerAdapter;
-import tickspot.application.sev.tickspot.managers.ProjectsAndTasksManager;
+import tickspot.application.sev.tickspot.managers.ResponsesManager;
 
 public class DayFragment extends RoboFragment {
 
     @Inject
-    private ProjectsAndTasksManager projectsAndTasksManager;
+    private ResponsesManager responsesManager;
 
     @InjectView(R.id.spinner_project)
     private Spinner spinnerProjects;
@@ -40,7 +40,7 @@ public class DayFragment extends RoboFragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        spinnerProjects.setAdapter(new ProjectsSpinnerAdapter(getActivity(),R.layout.spinner_row,projectsAndTasksManager.getProjects()));
+        spinnerProjects.setAdapter(new ProjectsSpinnerAdapter(getActivity(),R.layout.spinner_row, responsesManager.getProjects()));
         //spinnerTasks.setAdapter(new ProjectsSpinnerAdapter(getActivity(),R.layout.spinner_row,));
 
     }
