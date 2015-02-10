@@ -27,6 +27,7 @@ import java.util.List;
 import retrofit.RetrofitError;
 import roboguice.inject.InjectView;
 import tickspot.application.sev.tickspot.Constants;
+import tickspot.application.sev.tickspot.Credentials;
 import tickspot.application.sev.tickspot.R;
 import tickspot.application.sev.tickspot.managers.ProjectsAndTasksManager;
 import tickspot.application.sev.tickspot.managers.RetroManager;
@@ -34,9 +35,8 @@ import tickspot.application.sev.tickspot.model.ProjectList;
 import tickspot.application.sev.tickspot.model.TaskList;
 import tickspot.application.sev.tickspot.preferences.Preferences;
 import tickspot.application.sev.tickspot.restservice.ServiceFactory;
-import tickspot.application.sev.tickspot.restservice.models.Project;
+import tickspot.application.sev.tickspot.restservice.models.ProjectOrTasks;
 import tickspot.application.sev.tickspot.restservice.models.Subscription;
-import tickspot.application.sev.tickspot.restservice.models.Task;
 
 
 public class LoginActivity extends BaseActivity implements View.OnClickListener, TextView.OnEditorActionListener {
@@ -63,9 +63,9 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
     @InjectView(R.id.progress)
     private View mProgress;
 
-    List<Project> projectList;
+    List<ProjectOrTasks> projects;
 
-    List<Task> taskList;
+    List<ProjectOrTasks> tasks;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,6 +74,9 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
 
         mPasswordView.setOnEditorActionListener(this);
         mSignInButton.setOnClickListener(this);
+        //TODO Remove it from here later on
+        mLoginTask = new UserLoginTask();
+        mLoginTask.execute();
     }
 
 
@@ -149,10 +152,9 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
 
         @Override
         protected Integer doInBackground(Void... params) {
-            String basicAuth = "Basic " + Base64.encodeToString(String.format("%s:%s", mEmailView.getText().toString(), mPasswordView.getText().toString()).getBytes(), Base64.NO_WRAP);
-            String credentials = "salvatorelafiura@mobilevikings.com:h4ss3lt3500";
+            //String basicAuth = "Basic " + Base64.encodeToString(String.format("%s:%s", mEmailView.getText().toString(), mPasswordView.getText().toString()).getBytes(), Base64.NO_WRAP);
             //String credentials =(mEmailView.getText().toString() + ":" +mPasswordView.getText().toString());
-            String encodedCredentials = "Basic " + Base64.encodeToString(credentials.getBytes(), Base64.NO_WRAP);
+            String encodedCredentials = "Basic " + Base64.encodeToString(Credentials.credentials.getBytes(), Base64.NO_WRAP);
 
             try {
                 subscriptionsResponse = ServiceFactory.getService().getTokens(encodedCredentials);
@@ -202,7 +204,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
     @Subscribe
     public void onProjectsApiCallDone(ProjectList projectList) {
         Log.e("TEST", "Received ProjectList through the bus");
-        this.projectList = projectList.projects;
+        this.projects = projectList.projects;
         projectsAndTasksManager.setProjects(projectList.projects);
         areAllApiCallDone();
     }
@@ -210,16 +212,17 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
     @Subscribe
     public void onTasksApiCallDone(TaskList taskList) {
         Log.e("TEST", "Received TaskList through the bus");
-        this.taskList = taskList.tasks;
+        this.tasks = taskList.tasks;
         projectsAndTasksManager.setTasks(taskList.tasks);
         areAllApiCallDone();
     }
 
     private void areAllApiCallDone() {
-        showProgress(false);
-        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-        startActivity(intent);
-
+        if(tasks!=null && projects!=null) {
+            showProgress(false);
+            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+            startActivity(intent);
+        }
     }
 
 }

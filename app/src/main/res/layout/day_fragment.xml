@@ -3,7 +3,8 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_margin="10dp">
+    android:background="@color/gray_out_background"
+    android:padding="10dp">
 
     <TextView
         android:id="@android:id/text1"
@@ -17,8 +18,7 @@
         android:id="@+id/spinner_project"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        >
-    </Spinner>
+        android:padding="10dp"></Spinner>
 
     <TextView
         android:id="@android:id/text2"
@@ -31,8 +31,8 @@
     <Spinner
         android:id="@+id/spinner_task"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-    </Spinner>
+        android:layout_height="wrap_content"
+        android:padding="10dp"></Spinner>
 
 
 </LinearLayout>

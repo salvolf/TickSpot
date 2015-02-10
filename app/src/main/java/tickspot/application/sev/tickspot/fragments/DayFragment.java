@@ -41,5 +41,7 @@ public class DayFragment extends RoboFragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         spinnerProjects.setAdapter(new ProjectsSpinnerAdapter(getActivity(),R.layout.spinner_row,projectsAndTasksManager.getProjects()));
+        //spinnerTasks.setAdapter(new ProjectsSpinnerAdapter(getActivity(),R.layout.spinner_row,));
+
     }
 }

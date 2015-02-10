@@ -2,32 +2,31 @@ package tickspot.application.sev.tickspot.managers;
 
 import java.util.List;
 
-import tickspot.application.sev.tickspot.restservice.models.Project;
-import tickspot.application.sev.tickspot.restservice.models.Task;
+import tickspot.application.sev.tickspot.restservice.models.ProjectOrTasks;
 
 /**
  * Created by Sev on 08/02/15.
  */
 public class ProjectsAndTasksManagerImpl implements ProjectsAndTasksManager {
-    private List<Project> projects;
-    private List<Task> tasks;
+    private List<ProjectOrTasks> projects;
+    private List<ProjectOrTasks> tasks;
 
     @Override
-    public void setProjects(List<Project> projects) {
+    public void setProjects(List<ProjectOrTasks> projects) {
         this.projects=projects;
     }
 
     @Override
-    public void setTasks(List<Task> tasks) {
+    public void setTasks(List<ProjectOrTasks> tasks) {
         this.tasks=tasks;
     }
 
-    public List<Project> getProjects() {
+    public List<ProjectOrTasks> getProjects() {
         return projects;
     }
 
     @Override
-    public List<Task> getTasks() {
+    public List<ProjectOrTasks> getTasks() {
         return tasks;
     }
 

@@ -11,14 +11,13 @@ import tickspot.application.sev.tickspot.model.ProjectList;
 import tickspot.application.sev.tickspot.model.TaskList;
 import tickspot.application.sev.tickspot.preferences.Preferences;
 import tickspot.application.sev.tickspot.restservice.ServiceFactory;
-import tickspot.application.sev.tickspot.restservice.models.Project;
-import tickspot.application.sev.tickspot.restservice.models.Task;
+import tickspot.application.sev.tickspot.restservice.models.ProjectOrTasks;
 
 public class RetroManagerImpl implements RetroManager {
 
-    private Callback<List<Project>> projectsResponseCallback = new Callback<List<Project>>() {
+    private Callback<List<ProjectOrTasks>> projectsResponseCallback = new Callback<List<ProjectOrTasks>>() {
         @Override
-        public void success(List<Project> projectResponses, Response response) {
+        public void success(List<ProjectOrTasks> projectResponses, Response response) {
             //Post it into the bus:
             TickspotApplication.getEventBus().post(new ProjectList(projectResponses));
         }
@@ -29,9 +28,9 @@ public class RetroManagerImpl implements RetroManager {
         }
     };
 
-    private Callback<List<Task>> tasksResponseCallback = new Callback<List<Task>>() {
+    private Callback<List<ProjectOrTasks>> tasksResponseCallback = new Callback<List<ProjectOrTasks>>() {
         @Override
-        public void success(List<Task> tasksResponses, Response response) {
+        public void success(List<ProjectOrTasks> tasksResponses, Response response) {
             //Post it into the bus:
             TickspotApplication.getEventBus().post(new TaskList(tasksResponses));
         }
