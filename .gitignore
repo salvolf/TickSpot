@@ -54,5 +54,4 @@ Thumbs.db
  
 # gradle directory
 .gradle
-build/
-/Users/Sev/git/TickSpot/app/src/main/java/tickspot/application/sev/tickspot/Credentials.java
+app/src/main/java/tickspot/application/sev/tickspot/Credentials.java
