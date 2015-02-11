@@ -3,23 +3,24 @@ package tickspot.application.sev.tickspot.managers;
 import java.util.List;
 
 import tickspot.application.sev.tickspot.restservice.models.Client;
-import tickspot.application.sev.tickspot.restservice.models.ProjectOrTasks;
+import tickspot.application.sev.tickspot.restservice.models.Project;
+import tickspot.application.sev.tickspot.restservice.models.Task;
 
 /**
  * Created by Sev on 08/02/15.
  */
 public class ResponsesManagerImpl implements ResponsesManager {
-    private List<ProjectOrTasks> projects;
-    private List<ProjectOrTasks> tasks;
+    private List<Project> projects;
+    private List<Task> tasks;
     private List<Client> clients;
 
     @Override
-    public void setProjects(List<ProjectOrTasks> projects) {
+    public void setProjects(List<Project> projects) {
         this.projects=projects;
     }
 
     @Override
-    public void setTasks(List<ProjectOrTasks> tasks) {
+    public void setTasks(List<Task> tasks) {
         this.tasks=tasks;
     }
 
@@ -28,12 +29,12 @@ public class ResponsesManagerImpl implements ResponsesManager {
         this.clients=clients;
     }
 
-    public List<ProjectOrTasks> getProjects() {
+    public List<Project> getProjects() {
         return projects;
     }
 
     @Override
-    public List<ProjectOrTasks> getTasks() {
+    public List<Task> getTasks() {
         return tasks;
     }
 

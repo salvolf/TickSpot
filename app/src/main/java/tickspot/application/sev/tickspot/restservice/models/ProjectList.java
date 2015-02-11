@@ -8,9 +8,9 @@ import java.util.List;
  * Created by Sev on 03/02/15.
  */
 public class ProjectList implements Serializable {
-    public List<ProjectOrTasks> projects;
+    public List<Project> projects;
 
-    public ProjectList(List<ProjectOrTasks> projects) {
+    public ProjectList(List<Project> projects) {
         this.projects = new ArrayList<>(projects);
     }
 }

@@ -14,13 +14,13 @@ android {
     buildTypes {
         release {
             minifyEnabled false
-            buildConfigField "String", "TICKSPOT_API", "\"https://citylive.tickspot.com\""
+            buildConfigField "String", "TICKSPOT_API", "\"https://www.tickspot.com\""
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
         debug {
             minifyEnabled false
             debuggable true
-            buildConfigField "String", "TICKSPOT_API", "\"https://citylive.tickspot.com\""
+            buildConfigField "String", "TICKSPOT_API", "\"https://www.tickspot.com\""
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }

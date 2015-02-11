@@ -7,7 +7,7 @@ public class Constants {
     //Database constants
     public static final String DATABASE_NAME = "tickspot.db";
 
-    public static final int DATABASE_VERSION = 1;
+    public static final int DATABASE_VERSION = 4;
 
 
     public static String VIKINGO_COMPANY = "VikingCo";

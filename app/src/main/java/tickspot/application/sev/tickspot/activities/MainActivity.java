@@ -17,7 +17,6 @@ public class MainActivity extends BaseActivity implements ViewPager.OnPageChange
     @InjectView(R.id.tabs)
     private SlidingTabLayout mTabs;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

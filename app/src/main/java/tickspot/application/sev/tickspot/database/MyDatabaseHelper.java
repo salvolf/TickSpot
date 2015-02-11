@@ -5,13 +5,18 @@ import android.database.sqlite.SQLiteDatabase;
 
 import com.j256.ormlite.android.apptools.OrmLiteSqliteOpenHelper;
 import com.j256.ormlite.dao.RuntimeExceptionDao;
+import com.j256.ormlite.stmt.QueryBuilder;
 import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.TableUtils;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
-import retrofit.Endpoint;
 import tickspot.application.sev.tickspot.Constants;
+import tickspot.application.sev.tickspot.restservice.models.Client;
+import tickspot.application.sev.tickspot.restservice.models.Project;
+import tickspot.application.sev.tickspot.restservice.models.Task;
 
 /**
  * Database helper class used to manage the creation and upgrading of your
@@ -39,8 +44,9 @@ import tickspot.application.sev.tickspot.Constants;
  */
 public class MyDatabaseHelper extends OrmLiteSqliteOpenHelper {
 
-
-    private RuntimeExceptionDao<Endpoint, Integer> endpointRuntimeExceptionDao = null;
+    private RuntimeExceptionDao<Task, Integer> tasksRuntimeExceptionDao = null;
+    private RuntimeExceptionDao<Project, Integer> projectsRuntimeExceptionDao = null;
+    private RuntimeExceptionDao<Client, Integer> clientsRuntimeExceptionDao = null;
 
 
     public MyDatabaseHelper(Context context) {
@@ -57,7 +63,9 @@ public class MyDatabaseHelper extends OrmLiteSqliteOpenHelper {
 
         try {
             //TODO CREATE TABLE HERE
-            TableUtils.createTable(connectionSource, Endpoint.class);
+            TableUtils.createTable(connectionSource, Project.class);
+            TableUtils.createTable(connectionSource, Task.class);
+            TableUtils.createTable(connectionSource, Client.class);
 
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -72,8 +80,10 @@ public class MyDatabaseHelper extends OrmLiteSqliteOpenHelper {
     public void onUpgrade(SQLiteDatabase db, ConnectionSource connectionSource, int oldVersion, int newVersion) {
 
         try {
-           //TODO CLOSE TABLE HERE
-            TableUtils.dropTable(connectionSource, Endpoint.class, true);
+            //TODO CLOSE TABLE HERE
+            TableUtils.dropTable(connectionSource, Project.class, true);
+            TableUtils.dropTable(connectionSource, Task.class, true);
+            TableUtils.dropTable(connectionSource, Client.class, true);
 
             // after we drop the old databases, we create the new ones
             onCreate(db, connectionSource);
@@ -82,12 +92,75 @@ public class MyDatabaseHelper extends OrmLiteSqliteOpenHelper {
         }
     }
 
+    public RuntimeExceptionDao<Task, Integer> getTasksDao() {
+
+        if (tasksRuntimeExceptionDao == null) {
+            tasksRuntimeExceptionDao = getRuntimeExceptionDao(Task.class);
+        }
+        return tasksRuntimeExceptionDao;
+    }
+
+    public RuntimeExceptionDao<Project, Integer> getProjectsDao() {
+
+        if (projectsRuntimeExceptionDao == null) {
+            projectsRuntimeExceptionDao = getRuntimeExceptionDao(Project.class);
+        }
+        return projectsRuntimeExceptionDao;
+    }
+
+    public RuntimeExceptionDao<Client, Integer> getClientsDao() {
+
+        if (clientsRuntimeExceptionDao == null) {
+            clientsRuntimeExceptionDao = getRuntimeExceptionDao(Client.class);
+        }
+        return clientsRuntimeExceptionDao;
+    }
+
     /**
      * Close the database connections and clear any cached DAOs.
      */
     @Override
     public void close() {
         super.close();
+        tasksRuntimeExceptionDao = null;
+        projectsRuntimeExceptionDao = null;
+        clientsRuntimeExceptionDao = null;
+    }
+
+    public List<Task> getTasksRelatedToProject(long projectId) {
+        List<Task> tasks = new ArrayList<>();
+        try {
+            QueryBuilder<Task, Integer> statementBuilder = getTasksDao().queryBuilder();
+            statementBuilder.where().eq(Task.COLUMN_NAME_PROJECT_ID, projectId);
+            return statementBuilder.query();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return tasks;
+    }
+
+    public void clearTasks() {
+        try {
+            TableUtils.clearTable(connectionSource, Task.class);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void clearProjects() {
+        try {
+            TableUtils.clearTable(connectionSource, Project.class);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void clearClients() {
+        try {
+            TableUtils.clearTable(connectionSource, Client.class);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
 }

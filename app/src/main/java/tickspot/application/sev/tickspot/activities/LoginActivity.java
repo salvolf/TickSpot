@@ -35,9 +35,10 @@ import tickspot.application.sev.tickspot.preferences.Preferences;
 import tickspot.application.sev.tickspot.restservice.ServiceFactory;
 import tickspot.application.sev.tickspot.restservice.models.Client;
 import tickspot.application.sev.tickspot.restservice.models.ClientList;
+import tickspot.application.sev.tickspot.restservice.models.Project;
 import tickspot.application.sev.tickspot.restservice.models.ProjectList;
-import tickspot.application.sev.tickspot.restservice.models.ProjectOrTasks;
 import tickspot.application.sev.tickspot.restservice.models.Subscription;
+import tickspot.application.sev.tickspot.restservice.models.Task;
 import tickspot.application.sev.tickspot.restservice.models.TaskList;
 
 
@@ -65,9 +66,9 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
     @InjectView(R.id.progress)
     private View mProgress;
 
-    List<ProjectOrTasks> projects;
+    List<Project> projects;
 
-    List<ProjectOrTasks> tasks;
+    List<Task> tasks;
 
     List<Client> clients;
 

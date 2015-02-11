@@ -7,8 +7,8 @@ import java.util.List;
  * Created by Sev on 08/02/15.
  */
 public class TaskList {
-    public List<ProjectOrTasks> tasks;
-    public TaskList(List<ProjectOrTasks> tasks) {
+    public List<Task> tasks;
+    public TaskList(List<Task> tasks) {
         this.tasks = new ArrayList<>(tasks);
     }
 

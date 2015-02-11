@@ -10,15 +10,15 @@ import android.widget.TextView;
 import java.util.List;
 
 import tickspot.application.sev.tickspot.R;
-import tickspot.application.sev.tickspot.restservice.models.ProjectOrTasks;
+import tickspot.application.sev.tickspot.restservice.models.Project;
 
 /**
  * Created by Sev on 07/02/15.
  */
 public class ProjectsSpinnerAdapter extends ArrayAdapter {
-    private List<ProjectOrTasks> spinnerElement;
+    private List<Project> spinnerElement;
 
-    public ProjectsSpinnerAdapter(Context context, int resource, List<ProjectOrTasks> objects) {
+    public ProjectsSpinnerAdapter(Context context, int resource, List<Project> objects) {
         super(context, resource, objects);
         spinnerElement = objects;
     }
