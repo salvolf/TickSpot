@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <!-- MENU STRINGS-->
+    <string name="menu_settings">Settings</string>
+    <string name="menu_profile">Profile</string>
+
+
     <string name="app_name">TickSpot</string>
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
@@ -17,5 +22,6 @@
     <string name="problem_contacting_server">Could not connect to server</string>
     <string name="title_activity_main">MainActivity</string>
     <string name="title_activity_base">BaseActivity</string>
-
+    <string name="drawer_close">Close navigation drawer</string>
+    <string name="drawer_open">Open navigation drawer</string>
 </resources>
