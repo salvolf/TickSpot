@@ -28,6 +28,11 @@ public class RetroManagerImpl implements RetroManager {
     private Callback<List<Project>> projectsResponseCallback = new Callback<List<Project>>() {
         @Override
         public void success(List<Project> projectsList, Response response) {
+            //Store into the database:
+            databaseHelper.clearProjects();
+            for (Project project : projectsList) {
+                databaseHelper.getProjectsDao().create(project);
+            }
             //Post it into the bus:
             TickspotApplication.getEventBus().post(new ProjectList(projectsList));
         }
@@ -59,6 +64,11 @@ public class RetroManagerImpl implements RetroManager {
     private Callback<List<Client>> clientResponseCallback = new Callback<List<Client>>() {
         @Override
         public void success(List<Client> clientList, Response response) {
+            //Store into the database:
+            databaseHelper.clearClients();
+            for (Client client : clientList) {
+                databaseHelper.getClientsDao().create(client);
+            }
             TickspotApplication.getEventBus().post(new ClientList(clientList));
         }
 
