@@ -6,6 +6,7 @@ import android.database.sqlite.SQLiteDatabase;
 import com.j256.ormlite.android.apptools.OrmLiteSqliteOpenHelper;
 import com.j256.ormlite.dao.RuntimeExceptionDao;
 import com.j256.ormlite.stmt.QueryBuilder;
+import com.j256.ormlite.stmt.UpdateBuilder;
 import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.TableUtils;
 
@@ -16,6 +17,7 @@ import java.util.List;
 import tickspot.application.sev.tickspot.Constants;
 import tickspot.application.sev.tickspot.restservice.models.Client;
 import tickspot.application.sev.tickspot.restservice.models.Project;
+import tickspot.application.sev.tickspot.restservice.models.Subscription;
 import tickspot.application.sev.tickspot.restservice.models.Task;
 
 /**
@@ -47,6 +49,7 @@ public class MyDatabaseHelper extends OrmLiteSqliteOpenHelper {
     private RuntimeExceptionDao<Task, Integer> tasksRuntimeExceptionDao = null;
     private RuntimeExceptionDao<Project, Integer> projectsRuntimeExceptionDao = null;
     private RuntimeExceptionDao<Client, Integer> clientsRuntimeExceptionDao = null;
+    private RuntimeExceptionDao<Subscription, Integer> subscriptionsRuntimeExceptionDao = null;
 
 
     public MyDatabaseHelper(Context context) {
@@ -63,6 +66,7 @@ public class MyDatabaseHelper extends OrmLiteSqliteOpenHelper {
 
         try {
             //TODO CREATE TABLE HERE
+            TableUtils.createTable(connectionSource, Subscription.class);
             TableUtils.createTable(connectionSource, Project.class);
             TableUtils.createTable(connectionSource, Task.class);
             TableUtils.createTable(connectionSource, Client.class);
@@ -81,6 +85,7 @@ public class MyDatabaseHelper extends OrmLiteSqliteOpenHelper {
 
         try {
             //TODO CLOSE TABLE HERE
+            TableUtils.dropTable(connectionSource, Subscription.class, true);
             TableUtils.dropTable(connectionSource, Project.class, true);
             TableUtils.dropTable(connectionSource, Task.class, true);
             TableUtils.dropTable(connectionSource, Client.class, true);
@@ -90,6 +95,14 @@ public class MyDatabaseHelper extends OrmLiteSqliteOpenHelper {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public RuntimeExceptionDao<Subscription, Integer> getSubscriptionsDao() {
+
+        if (subscriptionsRuntimeExceptionDao == null) {
+            subscriptionsRuntimeExceptionDao = getRuntimeExceptionDao(Subscription.class);
+        }
+        return subscriptionsRuntimeExceptionDao;
     }
 
     public RuntimeExceptionDao<Task, Integer> getTasksDao() {
@@ -125,6 +138,7 @@ public class MyDatabaseHelper extends OrmLiteSqliteOpenHelper {
         tasksRuntimeExceptionDao = null;
         projectsRuntimeExceptionDao = null;
         clientsRuntimeExceptionDao = null;
+        subscriptionsRuntimeExceptionDao = null;
     }
 
     public List<Task> getTasksRelatedToProject(long projectId) {
@@ -137,6 +151,62 @@ public class MyDatabaseHelper extends OrmLiteSqliteOpenHelper {
             e.printStackTrace();
         }
         return tasks;
+    }
+
+    public String getClientNameById(long clientId) {
+        try {
+            QueryBuilder<Client, Integer> statementBuilder = getClientsDao().queryBuilder();
+            statementBuilder.where().eq(Client.COLUMN_NAME_ID, clientId);
+            List<Client> clients = statementBuilder.query();
+            if (clients.size() > 0) {
+                return clients.get(0).name;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    /*public String getSelectedClientName() {
+        String clientName = "";
+        try {
+            QueryBuilder<Client, Integer> statementBuilder = getClientsDao().queryBuilder();
+            statementBuilder.where().eq(Client.COLUMN_NAME_SELECTED, true);
+            List<Client> clients = statementBuilder.query();
+            if (!clients.isEmpty()) {
+                return clients.get(0).name;
+            } else {
+                //If no client selected return just the first one.
+                statementBuilder.where().eq(Client.COLUMN_NAME_SELECTED, false);
+                clients = statementBuilder.query();
+                return clients.get(0).name;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return clientName;
+    }
+
+    public void setSelectedClient(long clientId) {
+        try {
+
+            UpdateBuilder<Client, Integer> updateBuilder = getClientsDao().updateBuilder();
+            // set the criteria like you would a QueryBuilder
+            updateBuilder.where().eq(Client.COLUMN_NAME_ID, clientId);
+            // update the value of your field(s)
+            updateBuilder.updateColumnValue(Client.COLUMN_NAME_SELECTED , true);
+            updateBuilder.update();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }*/
+
+    public void clearSubscriptions() {
+        try {
+            TableUtils.clearTable(connectionSource, Subscription.class);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     public void clearTasks() {
@@ -161,6 +231,83 @@ public class MyDatabaseHelper extends OrmLiteSqliteOpenHelper {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+    }
+
+    public String getAccessToken() {
+        List<Subscription> subscriptions;
+        try {
+            QueryBuilder<Subscription, Integer> statementBuilder = getSubscriptionsDao().queryBuilder();
+            statementBuilder.where().eq(Subscription.COLUMN_NAME_SELECTED, true);
+            subscriptions = statementBuilder.query();
+            if (!subscriptions.isEmpty()) {
+                return subscriptions.get(0).api_token;
+            } else {
+                statementBuilder = getSubscriptionsDao().queryBuilder();
+                Subscription subscription = statementBuilder.queryForFirst();
+                if (subscription != null) {
+
+                    return subscription.api_token;
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public void setSelectedSubscription(String api_token) {
+        try {
+            UpdateBuilder<Subscription, Integer> updateBuilder = getSubscriptionsDao().updateBuilder();
+            // set the criteria like you would a QueryBuilder
+            updateBuilder.where().eq(Subscription.COLUMN_NAME_TOKEN, api_token);
+            // update the value of your field(s)
+            updateBuilder.updateColumnValue(Subscription.COLUMN_NAME_SELECTED, true);
+            updateBuilder.update();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public long getSelectedSubscriptionId() {
+        List<Subscription> subscriptions;
+        try {
+            QueryBuilder<Subscription, Integer> statementBuilder = getSubscriptionsDao().queryBuilder();
+            statementBuilder.where().eq(Subscription.COLUMN_NAME_SELECTED, true);
+            subscriptions = statementBuilder.query();
+            if (!subscriptions.isEmpty()) {
+                return subscriptions.get(0).subscription_id;
+            } else {
+                statementBuilder = getSubscriptionsDao().queryBuilder();
+                Subscription subscription = statementBuilder.queryForFirst();
+                if (subscription != null) {
+                    return subscription.subscription_id;
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return -1;
+    }
+
+    public String getSelectedSubscriptionCompany() {
+        List<Subscription> subscriptions;
+        try {
+            QueryBuilder<Subscription, Integer> statementBuilder = getSubscriptionsDao().queryBuilder();
+            statementBuilder.where().eq(Subscription.COLUMN_NAME_SELECTED, true);
+            subscriptions = statementBuilder.query();
+            if (!subscriptions.isEmpty()) {
+                return subscriptions.get(0).company;
+            } else {
+                statementBuilder = getSubscriptionsDao().queryBuilder();
+                Subscription subscription = statementBuilder.queryForFirst();
+                if (subscription != null) {
+                    return subscription.company;
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
 }

@@ -12,6 +12,7 @@ import com.j256.ormlite.field.DatabaseField;
 public class Client {
     public final static String COLUMN_NAME_ID = "id";
     public final static String COLUMN_NAME_NAME = "name";
+    public final static String COLUMN_NAME_SELECTED = "selected";
 
     @DatabaseField(columnName = COLUMN_NAME_ID)
     public long id;
@@ -21,6 +22,5 @@ public class Client {
 
     @DatabaseField
     public boolean archive;
-
 
 }

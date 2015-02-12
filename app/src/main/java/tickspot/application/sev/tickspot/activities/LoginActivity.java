@@ -1,43 +1,34 @@
 package tickspot.application.sev.tickspot.activities;
 
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Base64;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.inject.Inject;
 import com.squareup.otto.Subscribe;
 
-import org.apache.http.HttpStatus;
-
-import java.util.ArrayList;
 import java.util.List;
 
-import retrofit.RetrofitError;
 import roboguice.inject.InjectView;
-import tickspot.application.sev.tickspot.Constants;
 import tickspot.application.sev.tickspot.Credentials;
 import tickspot.application.sev.tickspot.R;
 import tickspot.application.sev.tickspot.managers.ResponsesManager;
 import tickspot.application.sev.tickspot.managers.RetroManager;
-import tickspot.application.sev.tickspot.preferences.Preferences;
-import tickspot.application.sev.tickspot.restservice.ServiceFactory;
 import tickspot.application.sev.tickspot.restservice.models.Client;
 import tickspot.application.sev.tickspot.restservice.models.ClientList;
 import tickspot.application.sev.tickspot.restservice.models.Project;
 import tickspot.application.sev.tickspot.restservice.models.ProjectList;
 import tickspot.application.sev.tickspot.restservice.models.Subscription;
+import tickspot.application.sev.tickspot.restservice.models.SubscriptionsList;
 import tickspot.application.sev.tickspot.restservice.models.Task;
 import tickspot.application.sev.tickspot.restservice.models.TaskList;
 
@@ -61,10 +52,10 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
     @InjectView(R.id.sign_in_button)
     private Button mSignInButton;
 
-    private UserLoginTask mLoginTask = null;
-
     @InjectView(R.id.progress)
     private View mProgress;
+
+    List<Subscription> subscriptions;
 
     List<Project> projects;
 
@@ -80,8 +71,8 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
         mPasswordView.setOnEditorActionListener(this);
         mSignInButton.setOnClickListener(this);
         //TODO Remove it from here later on
-        mLoginTask = new UserLoginTask();
-        mLoginTask.execute();
+        String encodedCredentials = "Basic " + Base64.encodeToString(Credentials.credentials.getBytes(), Base64.NO_WRAP);
+        retroManager.attemptLogin(encodedCredentials);
     }
 
 
@@ -90,21 +81,6 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -130,11 +106,14 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
         }
 
 
-        if (mLoginTask != null && (mLoginTask.getStatus() == AsyncTask.Status.RUNNING || mLoginTask.getStatus() == AsyncTask.Status.PENDING)) {
+        /*if (mLoginTask != null && (mLoginTask.getStatus() == AsyncTask.Status.RUNNING || mLoginTask.getStatus() == AsyncTask.Status.PENDING)) {
             mLoginTask.cancel(true);
-        }
-        mLoginTask = new UserLoginTask();
-        mLoginTask.execute();
+        }*/
+
+        String encodedCredentials = "Basic " + Base64.encodeToString(Credentials.credentials.getBytes(), Base64.NO_WRAP);
+        retroManager.attemptLogin(encodedCredentials);
+        //mLoginTask = new UserLoginTask();
+        //mLoginTask.execute();
     }
 
     @Override
@@ -145,7 +124,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
         return false;
     }
 
-    private class UserLoginTask extends AsyncTask<Void, Void, Integer> {
+    /*private class UserLoginTask extends AsyncTask<Void, Void, Integer> {
 
         private ArrayList<Subscription> subscriptionsResponse;
 
@@ -182,7 +161,6 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
                         retroManager.getClients();
                         retroManager.getProjects();
                         retroManager.getTasks();
-                        /**/
                     }
                 }
 
@@ -200,11 +178,23 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
                 Toast.makeText(LoginActivity.this, LoginActivity.this.getString(R.string.problem_contacting_server), Toast.LENGTH_SHORT).show();
             }
         }
-    }
+    }*/
 
     private void showProgress(boolean show) {
         mProgress.setVisibility(show ? View.VISIBLE : View.GONE);
         mSignInButton.setEnabled(!show);
+    }
+
+    @Subscribe
+    public void onLoginDone(SubscriptionsList subscriptionsList) {
+        Log.e("TEST", "Login done");
+        this.subscriptions = subscriptionsList.subscriptions;
+        responsesManager.setSubscriptions(subscriptionsList.subscriptions);
+        //Preferences.setAccessToken(subscriptionsList.subscriptions.get(0).api_token);
+        //Preferences.setSubscriptionID(subscriptionsList.subscriptions.get(0).subscription_id);
+        retroManager.getClients();
+        retroManager.getProjects();
+        retroManager.getTasks();
     }
 
     @Subscribe
@@ -232,10 +222,11 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
     }
 
     private void areAllApiCallDone() {
-        if(tasks!=null && projects!=null && clients!=null) {
+        if(tasks!=null && projects!=null && clients!=null && subscriptions!=null) {
             showProgress(false);
             Intent intent = new Intent(LoginActivity.this, MainActivity.class);
             startActivity(intent);
+            finish();
         }
     }
 

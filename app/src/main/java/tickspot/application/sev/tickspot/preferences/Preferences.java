@@ -31,7 +31,7 @@ public class Preferences {
     }
 
 
-    public static String getAccessToken() {
+    /*public static String getAccessToken() {
         return getInstance().getString(ACCESS_TOKEN, null);
     }
 
@@ -46,6 +46,18 @@ public class Preferences {
     }
 
     public static long getSubscriptionID() {
-        return getInstance().getLong(SUBSCRIPTION_ID,0);
+        return getInstance().getLong(SUBSCRIPTION_ID, 0);
+    }*/
+
+    private static final String CLIENT_SELECTED_ID = "selected_client_id";
+
+    public static void setClientSelectedId(long clientSelectedId) {
+        getEditorInstance().putLong(CLIENT_SELECTED_ID, clientSelectedId);
+        getEditorInstance().apply();
     }
+
+    public static long getClientSelectedId() {
+        return getInstance().getLong(CLIENT_SELECTED_ID, -1);
+    }
+
 }
