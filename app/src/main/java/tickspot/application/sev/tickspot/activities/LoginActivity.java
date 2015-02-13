@@ -18,9 +18,11 @@ import com.squareup.otto.Subscribe;
 
 import java.util.List;
 
+import roboguice.activity.RoboActivity;
 import roboguice.inject.InjectView;
 import tickspot.application.sev.tickspot.Credentials;
 import tickspot.application.sev.tickspot.R;
+import tickspot.application.sev.tickspot.TickspotApplication;
 import tickspot.application.sev.tickspot.managers.ResponsesManager;
 import tickspot.application.sev.tickspot.managers.RetroManager;
 import tickspot.application.sev.tickspot.restservice.models.Client;
@@ -33,7 +35,7 @@ import tickspot.application.sev.tickspot.restservice.models.Task;
 import tickspot.application.sev.tickspot.restservice.models.TaskList;
 
 
-public class LoginActivity extends BaseActivity implements View.OnClickListener, TextView.OnEditorActionListener {
+public class LoginActivity extends RoboActivity implements View.OnClickListener, TextView.OnEditorActionListener {
 
     private final static String TAG = "LoginActivity";
 
@@ -75,6 +77,17 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
         retroManager.attemptLogin(encodedCredentials);
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        TickspotApplication.getEventBus().register(this);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        TickspotApplication.getEventBus().unregister(this);
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

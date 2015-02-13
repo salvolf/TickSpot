@@ -5,11 +5,12 @@ import android.content.res.Configuration;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.PersistableBundle;
+import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -25,8 +26,10 @@ import com.google.inject.Inject;
 import java.util.ArrayList;
 import java.util.List;
 
+import roboguice.activity.RoboActionBarActivity;
 import roboguice.inject.InjectView;
 import tickspot.application.sev.tickspot.R;
+import tickspot.application.sev.tickspot.TickspotApplication;
 import tickspot.application.sev.tickspot.adapters.MenuAdapter;
 import tickspot.application.sev.tickspot.database.MyDatabaseHelper;
 import tickspot.application.sev.tickspot.managers.ResponsesManager;
@@ -35,7 +38,7 @@ import tickspot.application.sev.tickspot.preferences.Preferences;
 import tickspot.application.sev.tickspot.restservice.models.Client;
 import tickspot.application.sev.tickspot.restservice.models.Subscription;
 
-public abstract class BaseToolbarActivity extends BaseActivity {
+public abstract class BaseToolbarActivity extends RoboActionBarActivity {
 
 
     private Spinner mSpinner;
@@ -65,17 +68,19 @@ public abstract class BaseToolbarActivity extends BaseActivity {
     @Override
     public void onCreate(Bundle savedInstanceState, PersistableBundle persistentState) {
         mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
-        mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, mToolbar, R.string.drawer_open,
+        mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, R.drawable.ic_dialpad_white_24dp, R.string.drawer_open,
                 R.string.drawer_close) {
 
             public void onDrawerClosed(View view) {
-
+                Log.e("TEST", "Drawer close");
             }
 
             public void onDrawerOpened(View drawerView) {
+                Log.e("TEST", "Drawer open");
 
             }
         };
+        mDrawerToggle.setDrawerIndicatorEnabled(true);
         mDrawerLayout.setDrawerListener(mDrawerToggle);
 
         ArrayList<NavigationItem> temporaryMenuItems = new ArrayList<>();
@@ -94,15 +99,20 @@ public abstract class BaseToolbarActivity extends BaseActivity {
         if (mToolbar != null) {
             mSpinner.setVisibility(isSpinnerEnabled() ? View.VISIBLE : View.GONE);
             setSupportActionBar(mToolbar);
-            //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-            mToolbar.setLogo(R.drawable.ic_menu_white_24dp);
         }
     }
 
     @Override
     protected void onResume() {
         super.onResume();
+        TickspotApplication.getEventBus().register(this);
         updateActionBar();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        TickspotApplication.getEventBus().unregister(this);
     }
 
     @Override
