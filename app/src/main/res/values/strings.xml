@@ -24,4 +24,10 @@
     <string name="title_activity_base">BaseActivity</string>
     <string name="drawer_close">Close navigation drawer</string>
     <string name="drawer_open">Open navigation drawer</string>
+
+    <!-- Preset Dialog -->
+    <string name="add_preset">Add preset</string>
+    <string name="save_preset_button">Save preset</string>
+    <string name="cancel_preset_button">Cancel</string>
+
 </resources>

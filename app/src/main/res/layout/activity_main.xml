@@ -1,4 +1,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+
+
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
@@ -13,7 +16,27 @@
         <FrameLayout
             android:id="@+id/content_frame"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <Spinner
+                    android:id="@+id/spinner_preset"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
+                    android:padding="10dp" />
+
+                <com.disegnator.robotocalendar.RobotoCalendarView
+                    android:id="@+id/robotoCalendarPicker"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
+
+            </LinearLayout>
+        </FrameLayout>
 
         <ListView
             android:id="@+id/left_drawer"
@@ -24,4 +47,6 @@
             android:choiceMode="singleChoice"
             android:divider="@null" />
     </android.support.v4.widget.DrawerLayout>
+
+
 </LinearLayout>

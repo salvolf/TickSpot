@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import tickspot.application.sev.tickspot.Constants;
+import tickspot.application.sev.tickspot.model.Preset;
 import tickspot.application.sev.tickspot.restservice.models.Client;
 import tickspot.application.sev.tickspot.restservice.models.Project;
 import tickspot.application.sev.tickspot.restservice.models.Subscription;
@@ -50,6 +51,7 @@ public class MyDatabaseHelper extends OrmLiteSqliteOpenHelper {
     private RuntimeExceptionDao<Project, Integer> projectsRuntimeExceptionDao = null;
     private RuntimeExceptionDao<Client, Integer> clientsRuntimeExceptionDao = null;
     private RuntimeExceptionDao<Subscription, Integer> subscriptionsRuntimeExceptionDao = null;
+    private RuntimeExceptionDao<Preset, Integer> presetsRuntimeExceptionDao = null;
 
 
     public MyDatabaseHelper(Context context) {
@@ -70,6 +72,7 @@ public class MyDatabaseHelper extends OrmLiteSqliteOpenHelper {
             TableUtils.createTable(connectionSource, Project.class);
             TableUtils.createTable(connectionSource, Task.class);
             TableUtils.createTable(connectionSource, Client.class);
+            TableUtils.createTable(connectionSource, Preset.class);
 
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -89,6 +92,7 @@ public class MyDatabaseHelper extends OrmLiteSqliteOpenHelper {
             TableUtils.dropTable(connectionSource, Project.class, true);
             TableUtils.dropTable(connectionSource, Task.class, true);
             TableUtils.dropTable(connectionSource, Client.class, true);
+            TableUtils.dropTable(connectionSource, Preset.class, true);
 
             // after we drop the old databases, we create the new ones
             onCreate(db, connectionSource);
@@ -129,6 +133,14 @@ public class MyDatabaseHelper extends OrmLiteSqliteOpenHelper {
         return clientsRuntimeExceptionDao;
     }
 
+    public RuntimeExceptionDao<Preset, Integer> getPresetsDao() {
+
+        if (presetsRuntimeExceptionDao == null) {
+            presetsRuntimeExceptionDao = getRuntimeExceptionDao(Preset.class);
+        }
+        return presetsRuntimeExceptionDao;
+    }
+
     /**
      * Close the database connections and clear any cached DAOs.
      */
@@ -139,67 +151,8 @@ public class MyDatabaseHelper extends OrmLiteSqliteOpenHelper {
         projectsRuntimeExceptionDao = null;
         clientsRuntimeExceptionDao = null;
         subscriptionsRuntimeExceptionDao = null;
+        presetsRuntimeExceptionDao = null;
     }
-
-    public List<Task> getTasksRelatedToProject(long projectId) {
-        List<Task> tasks = new ArrayList<>();
-        try {
-            QueryBuilder<Task, Integer> statementBuilder = getTasksDao().queryBuilder();
-            statementBuilder.where().eq(Task.COLUMN_NAME_PROJECT_ID, projectId);
-            return statementBuilder.query();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return tasks;
-    }
-
-    public String getClientNameById(long clientId) {
-        try {
-            QueryBuilder<Client, Integer> statementBuilder = getClientsDao().queryBuilder();
-            statementBuilder.where().eq(Client.COLUMN_NAME_ID, clientId);
-            List<Client> clients = statementBuilder.query();
-            if (clients.size() > 0) {
-                return clients.get(0).name;
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
-    /*public String getSelectedClientName() {
-        String clientName = "";
-        try {
-            QueryBuilder<Client, Integer> statementBuilder = getClientsDao().queryBuilder();
-            statementBuilder.where().eq(Client.COLUMN_NAME_SELECTED, true);
-            List<Client> clients = statementBuilder.query();
-            if (!clients.isEmpty()) {
-                return clients.get(0).name;
-            } else {
-                //If no client selected return just the first one.
-                statementBuilder.where().eq(Client.COLUMN_NAME_SELECTED, false);
-                clients = statementBuilder.query();
-                return clients.get(0).name;
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return clientName;
-    }
-
-    public void setSelectedClient(long clientId) {
-        try {
-
-            UpdateBuilder<Client, Integer> updateBuilder = getClientsDao().updateBuilder();
-            // set the criteria like you would a QueryBuilder
-            updateBuilder.where().eq(Client.COLUMN_NAME_ID, clientId);
-            // update the value of your field(s)
-            updateBuilder.updateColumnValue(Client.COLUMN_NAME_SELECTED , true);
-            updateBuilder.update();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }*/
 
     public void clearSubscriptions() {
         try {
@@ -231,6 +184,40 @@ public class MyDatabaseHelper extends OrmLiteSqliteOpenHelper {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+    }
+
+    public void clearPresets() {
+        try {
+            TableUtils.clearTable(connectionSource, Preset.class);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public List<Task> getTasksRelatedToProject(long projectId) {
+        List<Task> tasks = new ArrayList<>();
+        try {
+            QueryBuilder<Task, Integer> statementBuilder = getTasksDao().queryBuilder();
+            statementBuilder.where().eq(Task.COLUMN_NAME_PROJECT_ID, projectId);
+            return statementBuilder.query();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return tasks;
+    }
+
+    public String getClientNameById(long clientId) {
+        try {
+            QueryBuilder<Client, Integer> statementBuilder = getClientsDao().queryBuilder();
+            statementBuilder.where().eq(Client.COLUMN_NAME_ID, clientId);
+            List<Client> clients = statementBuilder.query();
+            if (clients.size() > 0) {
+                return clients.get(0).name;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     public String getAccessToken() {
@@ -308,6 +295,21 @@ public class MyDatabaseHelper extends OrmLiteSqliteOpenHelper {
             e.printStackTrace();
         }
         return null;
+    }
+
+    public Preset getDefaultPreset() throws SQLException {
+        if (getProjectsDao().isTableExists() && getTasksDao().isTableExists()) {
+            QueryBuilder<Project, Integer> statementBuilderProject = getProjectsDao().queryBuilder();
+            Project firstProject = statementBuilderProject.queryForFirst();
+            QueryBuilder<Task, Integer> statementBuilderTask = getTasksDao().queryBuilder();
+            Task firstTask = statementBuilderTask.queryForFirst();
+            QueryBuilder<Subscription, Integer> statementBuilderSubscriptions = getSubscriptionsDao().queryBuilder();
+            Subscription firstSubscription = statementBuilderSubscriptions.queryForFirst();
+            return new Preset(firstProject, firstTask, firstSubscription, 8);
+        }
+        else{
+            return null;
+        }
     }
 
 }

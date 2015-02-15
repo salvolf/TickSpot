@@ -41,7 +41,7 @@ public class ProjectsSpinnerAdapter extends ArrayAdapter {
     private View getCustomView(int position, View convertView, ViewGroup parent) {
         LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View row = inflater.inflate(R.layout.spinner_row, parent, false);
-        TextView label = (TextView) row.findViewById(R.id.text_project);
+        TextView label = (TextView) row.findViewById(R.id.spinner_text);
         label.setText(String.valueOf(spinnerElement.get(position).name));
         return row;
     }

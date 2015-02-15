@@ -8,29 +8,39 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Spinner;
 
+import com.disegnator.robotocalendar.RobotoCalendarView;
 import com.google.inject.Inject;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
+import java.util.Locale;
 
 import roboguice.activity.RoboActionBarActivity;
 import roboguice.inject.InjectView;
 import tickspot.application.sev.tickspot.R;
 import tickspot.application.sev.tickspot.TickspotApplication;
 import tickspot.application.sev.tickspot.adapters.MenuAdapter;
+import tickspot.application.sev.tickspot.adapters.PresetSpinnerAdapter;
 import tickspot.application.sev.tickspot.adapters.SubscriptionAdapter;
 import tickspot.application.sev.tickspot.database.MyDatabaseHelper;
+import tickspot.application.sev.tickspot.dialogs.AddPresetDialog;
 import tickspot.application.sev.tickspot.managers.ResponsesManager;
 import tickspot.application.sev.tickspot.model.NavigationItem;
+import tickspot.application.sev.tickspot.model.Preset;
 import tickspot.application.sev.tickspot.preferences.Preferences;
 import tickspot.application.sev.tickspot.restservice.models.Client;
 
-public class MainActivity extends RoboActionBarActivity {
+public class MainActivity extends RoboActionBarActivity implements RobotoCalendarView.RobotoCalendarListener {
 
     @InjectView(R.id.drawer_layout)
     private DrawerLayout mDrawerLayout;
@@ -43,6 +53,12 @@ public class MainActivity extends RoboActionBarActivity {
     @InjectView(R.id.toolbar)
     private Toolbar mToolbar;
 
+    @InjectView(R.id.spinner_preset)
+    private Spinner mSpinnerPreset;
+
+    @InjectView(R.id.robotoCalendarPicker)
+    private RobotoCalendarView mRobotoCalendarPicker;
+
     @Inject
     private MyDatabaseHelper databaseHelper;
 
@@ -52,6 +68,15 @@ public class MainActivity extends RoboActionBarActivity {
     private Spinner mSpinner;
     private SubscriptionAdapter mAdapter;
     private long currentClientId;
+    private Calendar currentCalendar;
+    private int currentMonthIndex;
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,6 +107,21 @@ public class MainActivity extends RoboActionBarActivity {
         mDrawerList.setAdapter(new MenuAdapter(this, temporaryMenuItems));
         // Set the list's click listener
         mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
+
+        try {
+            List<Preset> presets = new ArrayList<Preset>();
+            presets.add(databaseHelper.getDefaultPreset());
+            mSpinnerPreset.setAdapter(new PresetSpinnerAdapter(this, presets));
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        mRobotoCalendarPicker.setRobotoCalendarListener(this);
+        currentMonthIndex = 0;
+        currentCalendar = Calendar.getInstance(Locale.getDefault());
+        mRobotoCalendarPicker.initializeCalendar(currentCalendar);
+
+        // Mark current day
+        //mRobotoCalendarPicker.markDayAsCurrentDay(currentCalendar.getTime());
     }
 
     @Override
@@ -106,9 +146,11 @@ public class MainActivity extends RoboActionBarActivity {
         super.onPause();
         TickspotApplication.getEventBus().unregister(this);
     }
+
     protected boolean isSpinnerEnabled() {
         return responsesManager.getClients().size() > 1;
     }
+
     public void updateActionBar() {
         if (mToolbar != null) {
             if (isSpinnerEnabled() && responsesManager.getSubscriptions().size() > 1) {
@@ -158,18 +200,52 @@ public class MainActivity extends RoboActionBarActivity {
         actionBar.setDisplayShowTitleEnabled(false);
         mSpinner.setVisibility(View.GONE);
     }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
             onBackPressed();
         }
+        else if (item.getItemId() == R.id.action_add_preset){
+            new AddPresetDialog().show(getSupportFragmentManager(),"Add Preset Dialog");
+        }
 
         return super.onOptionsItemSelected(item);
     }
+
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
         mDrawerToggle.onConfigurationChanged(newConfig);
+    }
+
+    @Override
+    public void onDateSelected(Date date) {
+        mRobotoCalendarPicker.markDayAsSelectedDay(date);
+    }
+
+    @Override
+    public void onLongDateSelected(Date date) {
+        mRobotoCalendarPicker.markDayAsSelectedDay(date);
+
+    }
+
+    @Override
+    public void onRightButtonClick() {
+        currentMonthIndex++;
+        updateCalendar();
+    }
+
+    @Override
+    public void onLeftButtonClick() {
+        currentMonthIndex--;
+        updateCalendar();
+    }
+
+    private void updateCalendar() {
+        currentCalendar = Calendar.getInstance(Locale.getDefault());
+        currentCalendar.add(Calendar.MONTH, currentMonthIndex);
+        mRobotoCalendarPicker.initializeCalendar(currentCalendar);
     }
 
     private class DrawerItemClickListener implements ListView.OnItemClickListener {
