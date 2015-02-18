@@ -2,26 +2,60 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/background_gray"
     android:padding="20dp">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/text_projects"
+        android:textStyle="bold"
+        style="@style/Base.TextAppearance.AppCompat.Large" />
 
     <Spinner
         android:id="@+id/spinner_projects_dialog"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@android:color/white"
         android:padding="10dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/text_tasks"
+        android:textStyle="bold"
+        style="@style/Base.TextAppearance.AppCompat.Large" />
 
     <Spinner
         android:id="@+id/spinner_tasks_dialog"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@android:color/white"
         android:padding="10dp" />
 
-    <NumberPicker
-        android:id="@+id/hours_picker"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center" />
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/text_hours"
+            android:textStyle="bold"
+            style="@style/Base.TextAppearance.AppCompat.Large" />
+
+        <EditText
+            android:id="@+id/hours_picker"
+            android:layout_width="80dp"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            android:background="@android:color/white"
+            android:inputType="number"/>
+
+    </LinearLayout>
+
 
     <LinearLayout
         android:id="@+id/buttons_layout"
@@ -37,6 +71,7 @@
             android:layout_margin="5dp"
             android:gravity="center"
             android:text="@string/cancel_preset_button"
+            style="@style/TickspotButtonStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
@@ -45,6 +80,7 @@
             android:layout_margin="5dp"
             android:layout_weight="1"
             android:gravity="center"
+            style="@style/TickspotButtonStyle"
             android:text="@string/save_preset_button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />

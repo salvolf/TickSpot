@@ -38,6 +38,12 @@ public class AddPresetDialog extends RoboDialogFragment implements View.OnClickL
     }
 
     @Override
+    public void onStart() {
+        super.onStart();
+        getDialog().getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
@@ -50,7 +56,7 @@ public class AddPresetDialog extends RoboDialogFragment implements View.OnClickL
         cancel = (Button) view.findViewById(R.id.button_cancel);
         projectsSpinner = (Spinner) view.findViewById(R.id.spinner_projects_dialog);
         tasksSpinner = (Spinner) view.findViewById(R.id.spinner_tasks_dialog);
-       projectsSpinner.setAdapter(new ProjectsSpinnerAdapter(view.getContext(),0,responsesManager.getProjects()));
+        projectsSpinner.setAdapter(new ProjectsSpinnerAdapter(view.getContext(), 0, responsesManager.getProjects()));
         //tasksSpinner.setAdapter(new ProjectsSpinnerAdapter(view.getContext(), 0, responsesManager.getTasks()));
         savePreset.setOnClickListener(this);
         cancel.setOnClickListener(this);

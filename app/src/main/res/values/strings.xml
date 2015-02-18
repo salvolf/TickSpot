@@ -29,5 +29,12 @@
     <string name="add_preset">Add preset</string>
     <string name="save_preset_button">Save preset</string>
     <string name="cancel_preset_button">Cancel</string>
+    <string name="text_projects">Select a project</string>
+    <string name="text_tasks">Select a task</string>
+    <string name="text_hours">Working hours</string>
+
+
+    <!-- Main activity -->
+    <string name="button_enter_time">Enter Time</string>
 
 </resources>

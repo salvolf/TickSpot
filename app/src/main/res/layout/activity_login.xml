@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fillViewport="true"
-    android:background="@color/background_grey"
+    android:background="@color/background_gray"
     tools:context=".LoginActivity">
 
     <FrameLayout
@@ -32,7 +32,7 @@
                 android:adjustViewBounds="true"
                 android:scaleType="centerInside"
                 android:layout_gravity="center_horizontal"
-                android:src="@drawable/tickspot_215" />
+                android:src="@drawable/tickspot_logo" />
 
             <View
                 android:layout_height="0dp"
@@ -87,7 +87,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_marginTop="@dimen/grid_double"
-                style="@style/VikingButtonStyle"
+                style="@style/TickspotButtonStyle"
                 android:fontFamily="sans-serif"
                 android:text="@string/login_button" />
 
