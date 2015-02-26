@@ -2,6 +2,7 @@ package tickspot.application.sev.tickspot.database;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 
 import com.j256.ormlite.android.apptools.OrmLiteSqliteOpenHelper;
 import com.j256.ormlite.dao.RuntimeExceptionDao;
@@ -15,6 +16,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import tickspot.application.sev.tickspot.Constants;
+import tickspot.application.sev.tickspot.R;
+import tickspot.application.sev.tickspot.TickspotApplication;
 import tickspot.application.sev.tickspot.model.Preset;
 import tickspot.application.sev.tickspot.restservice.models.Client;
 import tickspot.application.sev.tickspot.restservice.models.Project;
@@ -46,6 +49,7 @@ import tickspot.application.sev.tickspot.restservice.models.Task;
  * classes.
  */
 public class MyDatabaseHelper extends OrmLiteSqliteOpenHelper {
+    private final static String TAG = "MyDatabaseHelper";
 
     private RuntimeExceptionDao<Task, Integer> tasksRuntimeExceptionDao = null;
     private RuntimeExceptionDao<Project, Integer> projectsRuntimeExceptionDao = null;
@@ -72,7 +76,6 @@ public class MyDatabaseHelper extends OrmLiteSqliteOpenHelper {
             TableUtils.createTable(connectionSource, Project.class);
             TableUtils.createTable(connectionSource, Task.class);
             TableUtils.createTable(connectionSource, Client.class);
-            TableUtils.createTable(connectionSource, Preset.class);
 
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -92,7 +95,6 @@ public class MyDatabaseHelper extends OrmLiteSqliteOpenHelper {
             TableUtils.dropTable(connectionSource, Project.class, true);
             TableUtils.dropTable(connectionSource, Task.class, true);
             TableUtils.dropTable(connectionSource, Client.class, true);
-            TableUtils.dropTable(connectionSource, Preset.class, true);
 
             // after we drop the old databases, we create the new ones
             onCreate(db, connectionSource);
@@ -297,7 +299,7 @@ public class MyDatabaseHelper extends OrmLiteSqliteOpenHelper {
         return null;
     }
 
-    public Preset getDefaultPreset() throws SQLException {
+    /*public Preset getDefaultPreset() throws SQLException {
         if (getProjectsDao().isTableExists() && getTasksDao().isTableExists()) {
             QueryBuilder<Project, Integer> statementBuilderProject = getProjectsDao().queryBuilder();
             Project firstProject = statementBuilderProject.queryForFirst();
@@ -306,10 +308,115 @@ public class MyDatabaseHelper extends OrmLiteSqliteOpenHelper {
             QueryBuilder<Subscription, Integer> statementBuilderSubscriptions = getSubscriptionsDao().queryBuilder();
             Subscription firstSubscription = statementBuilderSubscriptions.queryForFirst();
             return new Preset(firstProject, firstTask, firstSubscription, 8);
-        }
-        else{
+        } else {
             return null;
         }
+    }*/
+
+    public List<Preset> getPresetsIfPresent() throws SQLException {
+        List<Preset> presets = new ArrayList<Preset>();
+        if (getPresetsDao().isTableExists()) {
+            QueryBuilder<Preset, Integer> statementBuilderPreset = getPresetsDao().queryBuilder();
+            presets = getPresetsDao().queryForAll();
+        }
+        else{
+        }
+        return presets;
     }
 
+    public List<Task> getTasks() {
+        if (getTasksDao().isTableExists()) {
+            List<Task> tasks = getTasksDao().queryForAll();
+            return tasks;
+        }
+        Log.e(TAG, "Tasks table does not exists");
+        return null;
+    }
+
+
+    public List<Project> getProjects() {
+        if (getProjectsDao().isTableExists()) {
+            List<Project> projects = getProjectsDao().queryForAll();
+            return projects;
+        }
+        Log.e(TAG, "Projects table does not exists");
+        return null;
+    }
+
+    public List<Subscription> getSubscriptions() {
+        if (getSubscriptionsDao().isTableExists()) {
+            List<Subscription> subscriptions = getSubscriptionsDao().queryForAll();
+            return subscriptions;
+        }
+        Log.e(TAG, "Subscription table does not exists");
+        return null;
+    }
+
+    public List<Client> getClients() {
+        if (getClientsDao().isTableExists()) {
+            List<Client> clients = getClientsDao().queryForAll();
+
+            return clients;
+        }
+        Log.e(TAG, "Clients table does not exists");
+        return null;
+
+    }
+
+    public ArrayList<String> getClientsName() {
+        ArrayList<String> clientsName=new ArrayList<>();
+        if (getClientsDao().isTableExists()) {
+            List<Client> clients = getClientsDao().queryForAll();
+            for(Client client : clients){
+                clientsName.add(client.name);
+            }
+            return clientsName;
+        }
+        Log.e(TAG, "Clients table does not exists");
+        return null;
+
+    }
+
+    public List<Project> getProjectsByClientId(long id) {
+        List<Project> projects = new ArrayList<Project>();
+        try {
+            if (getProjectsDao().isTableExists()) {
+                QueryBuilder<Project, Integer> statementBuilderProject = getProjectsDao().queryBuilder();
+                statementBuilderProject.where().eq(Project.COLUMN_NAME_CLIENT_ID, id);
+                projects = statementBuilderProject.query();
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return projects;
+    }
+
+    public ArrayList<String> getProjectsSortedByClient() {
+        ArrayList<String> projectsSortedByClient = new ArrayList<String>();
+        List<Client> clients = getClients();
+        for (int i = 0; i < clients.size(); i++) {
+            String name = clients.get(i).name;
+            long id = clients.get(i).id;
+            projectsSortedByClient.add(String.valueOf(name));
+            for (int j = 0; j < getProjectsByClientId(id).size(); j++) {
+                projectsSortedByClient.add(String.valueOf(getProjectsByClientId(id).get(j).name));
+            }
+        }
+        projectsSortedByClient.add(TickspotApplication.getContext().getString(R.string.select_project));
+        return projectsSortedByClient;
+    }
+
+    public long getProjectIdByName(String name) {
+        long id = 0L;
+        if (getProjectsDao().isTableExists()) {
+            try {
+                QueryBuilder<Project, Integer> statementBuilderProject = getProjectsDao().queryBuilder();
+                statementBuilderProject.where().eq(Project.COLUMN_NAME_NAME, name);
+                id = statementBuilderProject.queryForFirst().id;
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+        return id;
+    }
 }

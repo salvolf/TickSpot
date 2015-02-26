@@ -1,36 +1,44 @@
 package tickspot.application.sev.tickspot.adapters;
 
 import android.content.Context;
+import android.graphics.Typeface;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
-import java.util.List;
+import java.util.ArrayList;
 
+import roboguice.RoboGuice;
 import tickspot.application.sev.tickspot.R;
-import tickspot.application.sev.tickspot.restservice.models.Project;
+import tickspot.application.sev.tickspot.database.MyDatabaseHelper;
 
 /**
  * Created by Sev on 07/02/15.
  */
 public class ProjectsSpinnerAdapter extends ArrayAdapter {
-    private List<Project> spinnerElement;
 
-    public ProjectsSpinnerAdapter(Context context, int resource, List<Project> objects) {
+    private ArrayList<String> spinnerElement;
+
+    private MyDatabaseHelper databaseHelper;
+
+    private boolean hasItemSelected = false;
+
+    public ProjectsSpinnerAdapter(Context context, int resource, ArrayList<String> objects) {
         super(context, resource, objects);
         spinnerElement = objects;
+        databaseHelper = RoboGuice.getInjector(getContext()).getInstance(MyDatabaseHelper.class);
     }
 
     @Override
     public int getCount() {
-        return spinnerElement.size();
+        return spinnerElement.size() - 1;
     }
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-       return getCustomView(position,convertView,parent);
+        return getCustomView(hasItemSelected ? position : getCount() , convertView,parent);
     }
 
     @Override
@@ -42,7 +50,24 @@ public class ProjectsSpinnerAdapter extends ArrayAdapter {
         LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View row = inflater.inflate(R.layout.spinner_row, parent, false);
         TextView label = (TextView) row.findViewById(R.id.spinner_text);
-        label.setText(String.valueOf(spinnerElement.get(position).name));
+
+        label.setText(String.valueOf(String.valueOf(spinnerElement.get(position))));
+        if (databaseHelper.getClientsName().contains(spinnerElement.get(position))) {
+            label.setTypeface(null, Typeface.BOLD);
+            label.setClickable(true);
+        } else {
+            label.setTypeface(null, Typeface.NORMAL);
+            label.setClickable(false);
+        }
+
         return row;
+    }
+
+    public boolean hasItemSelected() {
+        return hasItemSelected;
+    }
+
+    public void setHasItemSelected(boolean hasItemSelected) {
+        this.hasItemSelected = hasItemSelected;
     }
 }

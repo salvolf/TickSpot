@@ -22,7 +22,6 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
 import java.util.Locale;
 
 import roboguice.activity.RoboActionBarActivity;
@@ -34,9 +33,7 @@ import tickspot.application.sev.tickspot.adapters.PresetSpinnerAdapter;
 import tickspot.application.sev.tickspot.adapters.SubscriptionAdapter;
 import tickspot.application.sev.tickspot.database.MyDatabaseHelper;
 import tickspot.application.sev.tickspot.dialogs.AddPresetDialog;
-import tickspot.application.sev.tickspot.managers.ResponsesManager;
 import tickspot.application.sev.tickspot.model.NavigationItem;
-import tickspot.application.sev.tickspot.model.Preset;
 import tickspot.application.sev.tickspot.preferences.Preferences;
 import tickspot.application.sev.tickspot.restservice.models.Client;
 
@@ -61,9 +58,6 @@ public class MainActivity extends RoboActionBarActivity implements RobotoCalenda
 
     @Inject
     private MyDatabaseHelper databaseHelper;
-
-    @Inject
-    private ResponsesManager responsesManager;
 
     private Spinner mSpinner;
     private SubscriptionAdapter mAdapter;
@@ -109,9 +103,10 @@ public class MainActivity extends RoboActionBarActivity implements RobotoCalenda
         mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
 
         try {
-            List<Preset> presets = new ArrayList<Preset>();
-            presets.add(databaseHelper.getDefaultPreset());
-            mSpinnerPreset.setAdapter(new PresetSpinnerAdapter(this, presets));
+            //TODO REMOVED THE DEFAULT PRESET FOR NOW
+           // List<Preset> presets = new ArrayList<Preset>();
+           // presets.add(databaseHelper.getDefaultPreset());
+            mSpinnerPreset.setAdapter(new PresetSpinnerAdapter(this, databaseHelper.getPresetsIfPresent()));
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -148,12 +143,12 @@ public class MainActivity extends RoboActionBarActivity implements RobotoCalenda
     }
 
     protected boolean isSpinnerEnabled() {
-        return responsesManager.getClients().size() > 1;
+        return databaseHelper.getClients().size() > 1;
     }
 
     public void updateActionBar() {
         if (mToolbar != null) {
-            if (isSpinnerEnabled() && responsesManager.getSubscriptions().size() > 1) {
+            if (isSpinnerEnabled() && databaseHelper.getSubscriptions().size() > 1) {
                 setActionBarModeSimSpinner();
             } else {
                 setActionBarModeTitleOnly();
@@ -162,16 +157,16 @@ public class MainActivity extends RoboActionBarActivity implements RobotoCalenda
     }
 
     private void setActionBarModeSimSpinner() {
-        if (responsesManager.getClients().size() > 1) {
+        if (databaseHelper.getClients().size() > 1) {
             ActionBar actionBar = getSupportActionBar();
             actionBar.setDisplayShowTitleEnabled(false);
-            mAdapter = new SubscriptionAdapter(actionBar.getThemedContext(), databaseHelper.getSelectedSubscriptionCompany(), responsesManager.getSubscriptions());
+            mAdapter = new SubscriptionAdapter(actionBar.getThemedContext(), databaseHelper.getSelectedSubscriptionCompany(), databaseHelper.getSubscriptions());
             mSpinner.setAdapter(mAdapter);
             mSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 
                 @Override
                 public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                    Client client = responsesManager.getClients().get(position);
+                    Client client = databaseHelper.getClients().get(position);
                     if (client.id != (currentClientId)) {
                         Preferences.setClientSelectedId(client.id);
                     }
@@ -184,10 +179,10 @@ public class MainActivity extends RoboActionBarActivity implements RobotoCalenda
             });
 
             int selectedIndex = 0;
-            for (int i = 0; i < responsesManager.getClients().size(); i++) {
-                if (Preferences.getClientSelectedId() != -1 && Preferences.getClientSelectedId() == (responsesManager.getClients().get(i).id)) {
+            for (int i = 0; i < databaseHelper.getClients().size(); i++) {
+                if (Preferences.getClientSelectedId() != -1 && Preferences.getClientSelectedId() == (databaseHelper.getClients().get(i).id)) {
                     selectedIndex = i;
-                    currentClientId = responsesManager.getClients().get(i).id;
+                    currentClientId = databaseHelper.getClients().get(i).id;
                 }
             }
             mSpinner.setSelection(selectedIndex);

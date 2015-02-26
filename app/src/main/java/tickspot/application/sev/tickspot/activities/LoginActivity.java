@@ -23,7 +23,6 @@ import roboguice.inject.InjectView;
 import tickspot.application.sev.tickspot.Credentials;
 import tickspot.application.sev.tickspot.R;
 import tickspot.application.sev.tickspot.TickspotApplication;
-import tickspot.application.sev.tickspot.managers.ResponsesManager;
 import tickspot.application.sev.tickspot.managers.RetroManager;
 import tickspot.application.sev.tickspot.restservice.models.Client;
 import tickspot.application.sev.tickspot.restservice.models.ClientList;
@@ -41,9 +40,6 @@ public class LoginActivity extends RoboActivity implements View.OnClickListener,
 
     @Inject
     private RetroManager retroManager;
-
-    @Inject
-    private ResponsesManager responsesManager;
 
     @InjectView(R.id.email)
     private EditText mEmailView;
@@ -137,62 +133,6 @@ public class LoginActivity extends RoboActivity implements View.OnClickListener,
         return false;
     }
 
-    /*private class UserLoginTask extends AsyncTask<Void, Void, Integer> {
-
-        private ArrayList<Subscription> subscriptionsResponse;
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            showProgress(true);
-        }
-
-        @Override
-        protected Integer doInBackground(Void... params) {
-            //String basicAuth = "Basic " + Base64.encodeToString(String.format("%s:%s", mEmailView.getText().toString(), mPasswordView.getText().toString()).getBytes(), Base64.NO_WRAP);
-            //String credentials =(mEmailView.getText().toString() + ":" +mPasswordView.getText().toString());
-            String encodedCredentials = "Basic " + Base64.encodeToString(Credentials.credentials.getBytes(), Base64.NO_WRAP);
-
-            try {
-                subscriptionsResponse = ServiceFactory.getService().getTokens(encodedCredentials);
-                return HttpStatus.SC_OK;
-            } catch (RetrofitError retrofitError) {
-                if (retrofitError.getResponse() != null) {
-                    return retrofitError.getResponse().getStatus();
-                }
-                return HttpStatus.SC_SERVICE_UNAVAILABLE;
-            }
-        }
-
-        @Override
-        protected void onPostExecute(final Integer responseCode) {
-            if (responseCode == HttpStatus.SC_OK) {
-                for (Subscription subscription : subscriptionsResponse) {
-                    if (subscription.company.equals(Constants.VIKINGO_COMPANY)) {
-                        Preferences.setAccessToken(subscriptionsResponse.get(0).api_token);
-                        Preferences.setSubscriptionID(subscriptionsResponse.get(0).subscription_id);
-                        retroManager.getClients();
-                        retroManager.getProjects();
-                        retroManager.getTasks();
-                    }
-                }
-
-            } else if (responseCode == HttpStatus.SC_BAD_REQUEST) {
-                showProgress(false);
-                mEmailView.setError(getString(R.string.error_incorrect_credentials));
-                mEmailView.requestFocus();
-
-                mPasswordView.setError(getString(R.string.error_incorrect_credentials));
-            } else if (responseCode == HttpStatus.SC_UNAUTHORIZED) {
-                showProgress(false);
-                Toast.makeText(LoginActivity.this, LoginActivity.this.getString(R.string.could_not_authenticate), Toast.LENGTH_SHORT).show();
-            } else {
-                showProgress(false);
-                Toast.makeText(LoginActivity.this, LoginActivity.this.getString(R.string.problem_contacting_server), Toast.LENGTH_SHORT).show();
-            }
-        }
-    }*/
-
     private void showProgress(boolean show) {
         mProgress.setVisibility(show ? View.VISIBLE : View.GONE);
         mSignInButton.setEnabled(!show);
@@ -202,9 +142,6 @@ public class LoginActivity extends RoboActivity implements View.OnClickListener,
     public void onLoginDone(SubscriptionsList subscriptionsList) {
         Log.e("TEST", "Login done");
         this.subscriptions = subscriptionsList.subscriptions;
-        responsesManager.setSubscriptions(subscriptionsList.subscriptions);
-        //Preferences.setAccessToken(subscriptionsList.subscriptions.get(0).api_token);
-        //Preferences.setSubscriptionID(subscriptionsList.subscriptions.get(0).subscription_id);
         retroManager.getClients();
         retroManager.getProjects();
         retroManager.getTasks();
@@ -214,7 +151,7 @@ public class LoginActivity extends RoboActivity implements View.OnClickListener,
     public void onProjectsApiCallDone(ProjectList projectList) {
         Log.e("TEST", "Received ProjectList through the bus");
         this.projects = projectList.projects;
-        responsesManager.setProjects(projectList.projects);
+        //responsesManager.setProjects(projectList.projects);
         areAllApiCallDone();
     }
 
@@ -222,7 +159,7 @@ public class LoginActivity extends RoboActivity implements View.OnClickListener,
     public void onTasksApiCallDone(TaskList taskList) {
         Log.e("TEST", "Received TaskList through the bus");
         this.tasks = taskList.tasks;
-        responsesManager.setTasks(taskList.tasks);
+        //responsesManager.setTasks(taskList.tasks);
         areAllApiCallDone();
     }
 
@@ -230,7 +167,7 @@ public class LoginActivity extends RoboActivity implements View.OnClickListener,
     public void onClientsApiCallDone(ClientList clientList) {
         Log.e("TEST", "Received ClientList through the bus");
         this.clients = clientList.clients;
-        responsesManager.setClients(clientList.clients);
+        //responsesManager.setClients(clientList.clients);
         areAllApiCallDone();
     }
 

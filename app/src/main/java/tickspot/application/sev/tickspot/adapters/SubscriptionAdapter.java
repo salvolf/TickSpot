@@ -15,7 +15,6 @@ import java.util.List;
 
 import tickspot.application.sev.tickspot.R;
 import tickspot.application.sev.tickspot.database.MyDatabaseHelper;
-import tickspot.application.sev.tickspot.managers.ResponsesManager;
 import tickspot.application.sev.tickspot.restservice.models.Subscription;
 
 /**
@@ -29,9 +28,6 @@ public class SubscriptionAdapter extends BaseAdapter {
 
     @Inject
     private MyDatabaseHelper databaseHelper;
-
-    @Inject
-    private ResponsesManager responsesManager;
 
     public SubscriptionAdapter(Context context, String title, List<Subscription> subscriptions) {
         this.inflater = LayoutInflater.from(context);
@@ -50,12 +46,12 @@ public class SubscriptionAdapter extends BaseAdapter {
 
     @Override
     public int getCount() {
-        return responsesManager.getSubscriptions().size();
+        return databaseHelper.getSubscriptions().size();
     }
 
     @Override
     public Subscription getItem(int position) {
-        return responsesManager.getSubscriptions().get(position);
+        return databaseHelper.getSubscriptions().get(position);
     }
 
     @Override

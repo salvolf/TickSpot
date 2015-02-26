@@ -15,13 +15,9 @@ import roboguice.fragment.RoboFragment;
 import roboguice.inject.InjectView;
 import tickspot.application.sev.tickspot.R;
 import tickspot.application.sev.tickspot.database.MyDatabaseHelper;
-import tickspot.application.sev.tickspot.managers.ResponsesManager;
 import tickspot.application.sev.tickspot.restservice.models.Task;
 
 public class DayFragment extends RoboFragment {
-
-    @Inject
-    private ResponsesManager responsesManager;
 
     @Inject
     private MyDatabaseHelper databaseHelper;

@@ -59,6 +59,7 @@
                     android:layout_height="wrap_content"
                     android:hint="@string/login_email"
                     android:inputType="textEmailAddress"
+                    android:fontFamily="sans-serif"
                     android:imeOptions="actionNext"
                     android:maxLines="1"
                     android:singleLine="true" />
@@ -77,6 +78,7 @@
                     android:imeActionLabel="@string/action_sign_in_short"
                     android:imeOptions="actionDone"
                     android:inputType="textPassword"
+                    android:fontFamily="sans-serif"
                     android:maxLines="1"
                     android:singleLine="true" />
             </com.wrapp.floatlabelededittext.FloatLabeledEditText>

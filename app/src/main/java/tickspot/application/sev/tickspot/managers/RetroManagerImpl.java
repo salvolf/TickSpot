@@ -23,6 +23,7 @@ import tickspot.application.sev.tickspot.restservice.models.Task;
 import tickspot.application.sev.tickspot.restservice.models.TaskList;
 
 public class RetroManagerImpl implements RetroManager {
+
     @Inject
     private MyDatabaseHelper databaseHelper;
 

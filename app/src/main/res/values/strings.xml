@@ -32,7 +32,11 @@
     <string name="text_projects">Select a project</string>
     <string name="text_tasks">Select a task</string>
     <string name="text_hours">Working hours</string>
-
+    <string name="select_project">Select one project to enable the Tasks</string>
+    <string name="spinner_preset_empty">Create one Preset</string>
+    <string name="project_string">Project:</string>
+    <string name="task_string">Task:</string>
+    <string name="hours_string">Working hours:</string>
 
     <!-- Main activity -->
     <string name="button_enter_time">Enter Time</string>
