@@ -5,6 +5,7 @@ import android.util.Log;
 
 import com.google.inject.Inject;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import retrofit.Callback;
@@ -27,13 +28,17 @@ public class RetroManagerImpl implements RetroManager {
     @Inject
     private MyDatabaseHelper databaseHelper;
 
+    private int pagination = 0;
+
+    List<Task> completeTasks = new ArrayList<>();
+
     private Callback<List<Subscription>> subscriptionsResponseCallback = new Callback<List<Subscription>>() {
         @Override
         public void success(List<Subscription> subscriptions, Response response) {
             //Store into the database:
             databaseHelper.clearSubscriptions();
             for (Subscription subscription : subscriptions) {
-                databaseHelper.getSubscriptionsDao().create(subscription);
+                databaseHelper.getSubscriptionsDao().createIfNotExists(subscription);
             }
             //Post it into the bus:
             TickspotApplication.getEventBus().post(new SubscriptionsList(subscriptions));
@@ -41,10 +46,9 @@ public class RetroManagerImpl implements RetroManager {
 
         @Override
         public void failure(RetrofitError error) {
-            Log.e("RETROFITERROR","RETROFITERROR: "+error.getMessage());
+            Log.e("RETROFITERROR", "RETROFITERROR: " + error.getMessage());
         }
     };
-
 
 
     private Callback<List<Project>> projectsResponseCallback = new Callback<List<Project>>() {
@@ -53,7 +57,7 @@ public class RetroManagerImpl implements RetroManager {
             //Store into the database:
             databaseHelper.clearProjects();
             for (Project project : projects) {
-                databaseHelper.getProjectsDao().create(project);
+                databaseHelper.getProjectsDao().createIfNotExists(project);
             }
             //Post it into the bus:
             TickspotApplication.getEventBus().post(new ProjectList(projects));
@@ -61,26 +65,31 @@ public class RetroManagerImpl implements RetroManager {
 
         @Override
         public void failure(RetrofitError error) {
-            Log.e("RETROFITERROR","RETROFITERROR: "+error.getMessage());
+            Log.e("RETROFITERROR", "RETROFITERROR: " + error.getMessage());
         }
     };
 
     private Callback<List<Task>> tasksResponseCallback = new Callback<List<Task>>() {
         @Override
         public void success(List<Task> tasks, Response response) {
+            databaseHelper.clearTasks();
             //Store into the database:
             //TODO Create asynctask for every task related to the database.
-            databaseHelper.clearTasks();
-            for (Task task : tasks) {
-                databaseHelper.getTasksDao().create(task);
+            while (tasks.size() > 0) {
+                completeTasks.addAll(tasks);
+                tasks.clear();
+                pagination++;
+                getTasks();
             }
-            //Post it into the bus:
+            for (Task task : completeTasks) {
+                databaseHelper.getTasksDao().createIfNotExists(task);
+            }
             TickspotApplication.getEventBus().post(new TaskList(tasks));
         }
 
         @Override
         public void failure(RetrofitError error) {
-            Log.e("RETROFITERROR","RETROFITERROR: "+error.getMessage());
+            Log.e("RETROFITERROR", "RETROFITERROR: " + error.getMessage());
         }
     };
 
@@ -97,7 +106,7 @@ public class RetroManagerImpl implements RetroManager {
 
         @Override
         public void failure(RetrofitError error) {
-        Log.e("RETROFITERROR","RETROFITERROR: "+error.getMessage());
+            Log.e("RETROFITERROR", "RETROFITERROR: " + error.getMessage());
         }
     };
 
@@ -113,12 +122,11 @@ public class RetroManagerImpl implements RetroManager {
 
     @Override
     public void getTasks() {
-        ServiceFactory.getService(databaseHelper.getAccessToken()).getTasks(String.valueOf(databaseHelper.getSelectedSubscriptionId()), tasksResponseCallback);
-
+        ServiceFactory.getService(databaseHelper.getAccessToken()).getTasks(String.valueOf(databaseHelper.getSelectedSubscriptionId()), pagination, tasksResponseCallback);
     }
 
     @Override
     public void getClients() {
-                ServiceFactory.getService(databaseHelper.getAccessToken()).getClients(String.valueOf(databaseHelper.getSelectedSubscriptionId()),clientResponseCallback);
+        ServiceFactory.getService(databaseHelper.getAccessToken()).getClients(String.valueOf(databaseHelper.getSelectedSubscriptionId()), clientResponseCallback);
     }
 }

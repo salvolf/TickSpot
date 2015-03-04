@@ -15,24 +15,22 @@ public class Preset {
     public final static String COLUMN_NAME_TASK = "task";
     public final static String COLUMN_NAME_SUBSCRIPTION = "subscription";
 
-    @DatabaseField(generatedId = true)
+    @DatabaseField(columnName = COLUMN_NAME_ID, generatedId = true)
     public int generatedId;
 
 
-    @DatabaseField(columnName = COLUMN_NAME_PROJECT,foreign = true)
+    @DatabaseField(columnName = COLUMN_NAME_PROJECT, foreign = true)
     private Project project;
 
-    @DatabaseField(columnName = COLUMN_NAME_TASK,foreign = true)
+    @DatabaseField(columnName = COLUMN_NAME_TASK, foreign = true)
     private Task task;
 
-    @DatabaseField(columnName = COLUMN_NAME_SUBSCRIPTION,foreign = true)
+    @DatabaseField(columnName = COLUMN_NAME_SUBSCRIPTION, foreign = true)
     private Subscription subscription;
 
     @DatabaseField
     private int workingHours = -1;
 
-    @DatabaseField(columnName = COLUMN_NAME_ID)
-    private int Id;
 
     public String getFormattedPreset() {
         String projectString = this.project != null && this.project.name != null ? TickspotApplication.getContext().getString(R.string.project_string) + this.project.name : "";

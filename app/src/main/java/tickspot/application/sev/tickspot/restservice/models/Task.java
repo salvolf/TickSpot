@@ -10,10 +10,7 @@ public class Task {
     public final static String COLUMN_NAME_NAME = "name";
     public final static String COLUMN_NAME_PROJECT_ID = "project_id";
 
-    @DatabaseField(generatedId = true)
-    public int generatedId;
-
-    @DatabaseField(columnName = COLUMN_NAME_ID)
+    @DatabaseField(columnName = COLUMN_NAME_ID,id = true)
     public int id;
 
     @DatabaseField(columnName = COLUMN_NAME_NAME)

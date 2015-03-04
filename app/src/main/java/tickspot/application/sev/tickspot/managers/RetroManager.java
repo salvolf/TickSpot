@@ -5,6 +5,7 @@ import java.util.List;
 import retrofit.http.GET;
 import retrofit.http.Header;
 import retrofit.http.Path;
+import retrofit.http.Query;
 import tickspot.application.sev.tickspot.restservice.models.Client;
 import tickspot.application.sev.tickspot.restservice.models.Project;
 import tickspot.application.sev.tickspot.restservice.models.Subscription;
@@ -19,8 +20,8 @@ public interface RetroManager {
         @GET("/{subscription_id}/api/v2/projects.json")
         public void getProjects(@Path("subscription_id") String subscription_id, retrofit.Callback<List<Project>> callback);
 
-        @GET("/{subscription_id}/api/v2/tasks/{page}")
-        public void getTasks(@Path("subscription_id") String subscription_id, retrofit.Callback<List<Task>> callback);
+        @GET("/{subscription_id}/api/v2/tasks.json")
+        public void getTasks(@Path("subscription_id") String subscription_id, @Query("page") int page,retrofit.Callback<List<Task>> callback );
 
         @GET("/{subscription_id}/api/v2/clients.json")
         public void getClients(@Path("subscription_id") String subscription_id,retrofit.Callback<List<Client>> callback);

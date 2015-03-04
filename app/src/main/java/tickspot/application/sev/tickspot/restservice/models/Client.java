@@ -14,7 +14,7 @@ public class Client {
     public final static String COLUMN_NAME_NAME = "name";
     public final static String COLUMN_NAME_SELECTED = "selected";
 
-    @DatabaseField(columnName = COLUMN_NAME_ID)
+    @DatabaseField(columnName = COLUMN_NAME_ID, id = true)
     public long id;
 
     @DatabaseField(columnName = COLUMN_NAME_NAME)
