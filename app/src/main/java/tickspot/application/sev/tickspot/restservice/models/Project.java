@@ -7,7 +7,10 @@ public class Project {
     public final static String COLUMN_NAME_NAME = "name";
     public final static String COLUMN_NAME_CLIENT_ID = "client_id";
 
-    @DatabaseField(columnName = COLUMN_NAME_ID,generatedId = true)
+    @DatabaseField(generatedId = true)
+    public int generatedId;
+
+    @DatabaseField(columnName = COLUMN_NAME_ID)
     public int id;
 
     @DatabaseField(columnName = COLUMN_NAME_NAME)

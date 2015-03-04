@@ -13,11 +13,14 @@ import android.widget.Spinner;
 
 import com.google.inject.Inject;
 
+import java.util.List;
+
 import roboguice.fragment.RoboDialogFragment;
 import tickspot.application.sev.tickspot.R;
 import tickspot.application.sev.tickspot.adapters.ProjectsSpinnerAdapter;
 import tickspot.application.sev.tickspot.adapters.TasksSpinnerAdapter;
 import tickspot.application.sev.tickspot.database.MyDatabaseHelper;
+import tickspot.application.sev.tickspot.restservice.models.Task;
 
 public class AddPresetDialog extends RoboDialogFragment implements View.OnClickListener, AdapterView.OnItemSelectedListener {
 
@@ -29,6 +32,9 @@ public class AddPresetDialog extends RoboDialogFragment implements View.OnClickL
     private Spinner projectsSpinner;
     private Spinner tasksSpinner;
     private ProjectsSpinnerAdapter projectAdapter;
+    private TasksSpinnerAdapter taskAdapter;
+    private int projectSpinnerOnItemSelectedTriggeredTimes = 0;
+
 
     @NonNull
     @Override
@@ -83,8 +89,16 @@ public class AddPresetDialog extends RoboDialogFragment implements View.OnClickL
 
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+        projectAdapter.setHasItemSelected(true);
+
         if (parent.getId() == projectsSpinner.getId()) {
-            projectAdapter.setHasItemSelected(true);
+            projectSpinnerOnItemSelectedTriggeredTimes++;
+            if (projectSpinnerOnItemSelectedTriggeredTimes > 1) {
+                String projectSelectedName = String.valueOf(projectsSpinner.getSelectedItem());
+                long projectId = databaseHelper.getProjectIdByName(projectSelectedName);
+                List<Task> tasksRelatedToSelectedProject = databaseHelper.getTasksRelatedToProject(projectId);
+                tasksSpinner.setAdapter(new TasksSpinnerAdapter(view.getContext(), 0, tasksRelatedToSelectedProject));
+            }
         }
     }
 

@@ -15,7 +15,11 @@ public class Subscription {
     public final static String COLUMN_NAME_SELECTED = "selected";
     public final static String COLUMN_NAME_AUTOGENERATE_ID = "id";
 
-    @DatabaseField(columnName = COLUMN_NAME_AUTOGENERATE_ID,generatedId = true)
+
+    @DatabaseField(generatedId = true)
+    public int generatedId;
+
+    @DatabaseField(columnName = COLUMN_NAME_AUTOGENERATE_ID)
     private long id;
 
     @DatabaseField(columnName = COLUMN_NAME_ID)

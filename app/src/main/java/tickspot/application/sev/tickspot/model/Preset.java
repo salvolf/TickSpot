@@ -15,6 +15,10 @@ public class Preset {
     public final static String COLUMN_NAME_TASK = "task";
     public final static String COLUMN_NAME_SUBSCRIPTION = "subscription";
 
+    @DatabaseField(generatedId = true)
+    public int generatedId;
+
+
     @DatabaseField(columnName = COLUMN_NAME_PROJECT,foreign = true)
     private Project project;
 
@@ -27,7 +31,7 @@ public class Preset {
     @DatabaseField
     private int workingHours = -1;
 
-    @DatabaseField(columnName = COLUMN_NAME_ID, generatedId = true)
+    @DatabaseField(columnName = COLUMN_NAME_ID)
     private int Id;
 
     public String getFormattedPreset() {

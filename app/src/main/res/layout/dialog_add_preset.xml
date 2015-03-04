@@ -16,7 +16,8 @@
     <Spinner
         android:id="@+id/spinner_projects_dialog"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="70dp"
+        android:spinnerMode="dialog"
         android:background="@android:color/white"
         android:padding="10dp" />
 
@@ -30,7 +31,7 @@
     <Spinner
         android:id="@+id/spinner_tasks_dialog"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="70dp"
         android:background="@android:color/white"
         android:padding="10dp" />
 

@@ -8,6 +8,7 @@ import retrofit.RequestInterceptor;
 import retrofit.RestAdapter;
 import retrofit.client.OkClient;
 import tickspot.application.sev.tickspot.BuildConfig;
+import tickspot.application.sev.tickspot.Credentials;
 import tickspot.application.sev.tickspot.database.MyDatabaseHelper;
 import tickspot.application.sev.tickspot.managers.RetroManager;
 
@@ -40,7 +41,7 @@ public class ServiceFactory {
             public void intercept(RequestFacade requestFacade) {
                 //String accessToken = Preferences.getAccessToken();
                 requestFacade.addHeader("Authorization", "Token token=" + token);
-                requestFacade.addHeader("User-Agent", "MyCoolApp (me@example.com)");
+                requestFacade.addHeader("User-Agent", Credentials.myEmail);
             }
         };
 

@@ -412,7 +412,7 @@ public class MyDatabaseHelper extends OrmLiteSqliteOpenHelper {
             try {
                 QueryBuilder<Project, Integer> statementBuilderProject = getProjectsDao().queryBuilder();
                 statementBuilderProject.where().eq(Project.COLUMN_NAME_NAME, name);
-                id = statementBuilderProject.queryForFirst().id;
+                return statementBuilderProject.queryForFirst().id;
             } catch (SQLException e) {
                 e.printStackTrace();
             }

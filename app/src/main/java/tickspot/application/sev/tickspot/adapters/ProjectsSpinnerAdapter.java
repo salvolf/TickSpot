@@ -38,7 +38,7 @@ public class ProjectsSpinnerAdapter extends ArrayAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        return getCustomView(hasItemSelected ? position : getCount() , convertView,parent);
+        return getCustomView(hasItemSelected() ? position : getCount(), convertView, parent);
     }
 
     @Override
@@ -51,7 +51,6 @@ public class ProjectsSpinnerAdapter extends ArrayAdapter {
         View row = inflater.inflate(R.layout.spinner_row, parent, false);
         TextView label = (TextView) row.findViewById(R.id.spinner_text);
 
-        label.setText(String.valueOf(String.valueOf(spinnerElement.get(position))));
         if (databaseHelper.getClientsName().contains(spinnerElement.get(position))) {
             label.setTypeface(null, Typeface.BOLD);
             label.setClickable(true);
@@ -59,6 +58,7 @@ public class ProjectsSpinnerAdapter extends ArrayAdapter {
             label.setTypeface(null, Typeface.NORMAL);
             label.setClickable(false);
         }
+        label.setText(String.valueOf(String.valueOf(spinnerElement.get(position))));
 
         return row;
     }

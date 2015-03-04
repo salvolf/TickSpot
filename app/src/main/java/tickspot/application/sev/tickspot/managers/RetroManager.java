@@ -19,7 +19,7 @@ public interface RetroManager {
         @GET("/{subscription_id}/api/v2/projects.json")
         public void getProjects(@Path("subscription_id") String subscription_id, retrofit.Callback<List<Project>> callback);
 
-        @GET("/{subscription_id}/api/v2/tasks.json")
+        @GET("/{subscription_id}/api/v2/tasks/{page}")
         public void getTasks(@Path("subscription_id") String subscription_id, retrofit.Callback<List<Task>> callback);
 
         @GET("/{subscription_id}/api/v2/clients.json")
