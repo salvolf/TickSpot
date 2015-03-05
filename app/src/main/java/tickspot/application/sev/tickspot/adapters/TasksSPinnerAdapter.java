@@ -17,6 +17,7 @@ import tickspot.application.sev.tickspot.restservice.models.Task;
  */
 public class TasksSpinnerAdapter extends ArrayAdapter {
     private List<Task> spinnerElement;
+    private boolean hasItemSelected = false;
 
     public TasksSpinnerAdapter(Context context, int resource, List<Task> objects) {
         super(context, resource, objects);
@@ -30,7 +31,7 @@ public class TasksSpinnerAdapter extends ArrayAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        return getCustomView(position,convertView,parent);
+        return getCustomView(position, convertView, parent);
     }
 
     @Override
@@ -44,5 +45,13 @@ public class TasksSpinnerAdapter extends ArrayAdapter {
         TextView label = (TextView) row.findViewById(R.id.spinner_text);
         label.setText(String.valueOf(spinnerElement.get(position).name));
         return row;
+    }
+
+    public boolean hasItemSelected() {
+        return hasItemSelected;
+    }
+
+    public void setHasItemSelected(boolean hasItemSelected) {
+        this.hasItemSelected = hasItemSelected;
     }
 }

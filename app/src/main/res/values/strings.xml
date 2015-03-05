@@ -37,6 +37,7 @@
     <string name="project_string">Project:</string>
     <string name="task_string">Task:</string>
     <string name="hours_string">Working hours:</string>
+    <string name="spinners_not_selected">To save a Preset you need to select both spinners</string>
 
     <!-- Main activity -->
     <string name="button_enter_time">Enter Time</string>

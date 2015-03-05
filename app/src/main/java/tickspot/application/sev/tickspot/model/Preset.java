@@ -5,7 +5,6 @@ import com.j256.ormlite.field.DatabaseField;
 import tickspot.application.sev.tickspot.R;
 import tickspot.application.sev.tickspot.TickspotApplication;
 import tickspot.application.sev.tickspot.restservice.models.Project;
-import tickspot.application.sev.tickspot.restservice.models.Subscription;
 import tickspot.application.sev.tickspot.restservice.models.Task;
 
 public class Preset {
@@ -13,7 +12,7 @@ public class Preset {
     public final static String COLUMN_NAME_ID = "id";
     public final static String COLUMN_NAME_PROJECT = "project";
     public final static String COLUMN_NAME_TASK = "task";
-    public final static String COLUMN_NAME_SUBSCRIPTION = "subscription";
+    public final static String COLUMN_NAME_SUBSCRIPTION_ID = "subscription_id";
 
     @DatabaseField(columnName = COLUMN_NAME_ID, generatedId = true)
     public int generatedId;
@@ -25,11 +24,22 @@ public class Preset {
     @DatabaseField(columnName = COLUMN_NAME_TASK, foreign = true)
     private Task task;
 
-    @DatabaseField(columnName = COLUMN_NAME_SUBSCRIPTION, foreign = true)
-    private Subscription subscription;
+    @DatabaseField(columnName = COLUMN_NAME_SUBSCRIPTION_ID)
+    long  subscriptionId;
 
     @DatabaseField
     private int workingHours = -1;
+
+    public Preset(){
+
+    }
+
+    public Preset(Project selectedProject, Task selectedTask, long selectedSubscriptionId, int selectedHours) {
+        this.project = selectedProject;
+        this.task = selectedTask;
+        this.subscriptionId = selectedSubscriptionId;
+        this.workingHours = selectedHours;
+    }
 
 
     public String getFormattedPreset() {
